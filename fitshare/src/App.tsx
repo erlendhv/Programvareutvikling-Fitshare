@@ -3,7 +3,7 @@ import './App.css';
 import { FiThumbsUp } from "react-icons/fi";
 import { useState } from 'react';
 import ExercisePhoto from './ExercisePhoto.jpeg';
-
+import { AiOutlineComment } from "react-icons/ai";
 
 function App() {
 
@@ -52,7 +52,7 @@ function App() {
         <div className="Group-feed">
           <div className="Post">
             <div className="Post-likes">{post.likes}</div>
-            <FiThumbsUp className={"Thumbs-up"}
+            <FiThumbsUp className={"Thumb-icon"}
 
               style={{ fill: post.liked ? "yellow" : "" }}
               onClick={() => {
@@ -71,7 +71,7 @@ function App() {
 
           <div className="Post">
             <div className="Post-likes">{post.likes}</div>
-            <FiThumbsUp className={"Thumbs-up"}
+            <FiThumbsUp className={"Thumb-icon"}
 
               style={{ fill: post.liked ? "yellow" : "" }}
               onClick={() => {
@@ -85,6 +85,10 @@ function App() {
             <br></br>
             <div className="Post-content">
               <img src={ExercisePhoto} className="Post-image" alt="Exercise" />
+            </div>
+            <div className="Comment-icon">
+              Comment
+              <AiOutlineComment />
             </div>
           </div>
 

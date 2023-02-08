@@ -144,7 +144,7 @@
   right: 45px;
 }
 
-.Thumbs-up {
+.Thumb-icon {
   position: absolute;
   font-size: 30px;
   top: 10px;
@@ -152,8 +152,8 @@
   color: yellow;
 }
 
-.Thumbs-up:hover {
-  color: #FFF500;
+.Thumb-icon:hover {
+  color: #b6b00c;
   cursor: pointer;
 }
 
@@ -168,6 +168,23 @@
   position: relative;
   width: 100%;
   height: auto;
+}
+
+.Comment-icon {
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+  color: lightgray;
+  font-size: 20px;
+}
+
+.Comment-icon:hover {
+  color: #7c7c7c;
+  cursor: pointer;
+}
+
+.Comment-icon:active {
+  color: #4c4c4c;
 }
 
 .Right-side-bar {
