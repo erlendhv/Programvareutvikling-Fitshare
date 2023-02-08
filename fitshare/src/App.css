@@ -8,6 +8,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  user-select: none;
 }
 
 .Left-side-bar {
@@ -106,6 +107,15 @@
   filter: drop-shadow(-10px 10px 10px rgba(0, 0, 0, 0.25));
 }
 
+.Post-button:hover {
+  background: #cec70d;
+  cursor: pointer;
+}
+
+.Post-button:active {
+  background: #b3a900;
+}
+
 .Group-feed {
   position: relative;
   width: 100%;
@@ -140,20 +150,16 @@
   color: yellow;
 }
 
+.Thumbs-up:hover {
+  color: #FFF500;
+  cursor: pointer;
+}
+
 .Post-content {
   position: relative;
   width: 100%;
   height: auto;
   margin: 10px;
-}
-
-.Thumbs-up-clicked {
-  position: absolute;
-  font-size: 30px;
-  top: 10px;
-  right: 10px;
-  color: yellow;
-  fill: yellow;
 }
 
 .Right-side-bar {
@@ -180,14 +186,23 @@
   font-weight: bold;
 
   background: #FFF500;
-  border-radius: 33px;
+  border-radius: 20px;
 
   filter: drop-shadow(-10px 10px 10px rgba(0, 0, 0, 0.25));
 }
 
+.Programs-button:hover {
+  background: #cec70d;
+  cursor: pointer;
+}
+
+.Programs-button:active {
+  background: #b3a900;
+}
+
 .Friends {
   position: relative;
-  width: 100%;
+  width: 90%;
   height: 80%;
   background: #272727;
   display: flex;

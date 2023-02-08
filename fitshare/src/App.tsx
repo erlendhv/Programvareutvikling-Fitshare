@@ -51,7 +51,9 @@ function App() {
         <div className="Group-feed">
           <div className="Post">
             <div className="Post-likes">{post.likes}</div>
-            <FiThumbsUp className={post.liked ? "Thumbs-up-clicked" : "Thumbs-up"}
+            <FiThumbsUp className={"Thumbs-up"}
+
+              style={{ fill: post.liked ? "yellow" : "" }}
               onClick={() => {
                 if (post.liked) {
                   setPost({ ...post, likes: post.likes - 1, liked: false })
