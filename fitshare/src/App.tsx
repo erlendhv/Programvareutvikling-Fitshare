@@ -4,6 +4,7 @@ import { FiThumbsUp } from "react-icons/fi";
 import { useState } from 'react';
 import ExercisePhoto from './ExercisePhoto.jpeg';
 import { AiOutlineComment } from "react-icons/ai";
+import FitShareLogo from './FitShareLogo.png';
 
 function App() {
 
@@ -18,7 +19,9 @@ function App() {
     <div className="App">
       <div className="Left-side-bar">
 
-        <div className="Home-icon-box">FS</div>
+        <img className="FitSharelogo" src={FitShareLogo}>
+
+        </img>
         <div className="Groups">
           <strong>Groups</strong>
 

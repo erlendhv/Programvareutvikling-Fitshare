@@ -19,24 +19,21 @@
   top: 0px;
 }
 
-.Home-icon-box {
+.FitSharelogo {
   text-align: center;
   font-size: 50px;
   color: yellow;
-  line-height: 120px;
   position: relative;
-  left: 0%;
-  top: 0%;
   width: 100%;
-  height: 15%;
+  height: 10%;
   background: #383838;
+  display: block;
 }
 
 .Groups {
   position: relative;
   width: 100%;
-  height: 80%;
-  padding-top: 20px;
+  height: 90%;
   background: #272727;
   display: flex;
   flex-direction: column;
@@ -103,6 +100,8 @@
   margin-top: 60px;
   margin-bottom: 20px;
   font-weight: bold;
+
+  min-width: 130px;
 
   background: #FFF500;
   border-radius: 100px;
@@ -242,13 +241,13 @@
 
 .Friend {
   position: relative;
-  width: 100%;
+  width: 95%;
 
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-top: 20px;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 .Friend-profile-pic {
