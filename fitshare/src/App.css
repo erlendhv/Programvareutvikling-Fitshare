@@ -132,6 +132,8 @@
   padding: 20px;
   text-align: left;
 
+  margin-top: 20px;
+
   background: #323232;
 }
 
@@ -160,6 +162,12 @@
   width: 100%;
   height: auto;
   margin: 10px;
+}
+
+.Post-image {
+  position: relative;
+  width: 100%;
+  height: auto;
 }
 
 .Right-side-bar {

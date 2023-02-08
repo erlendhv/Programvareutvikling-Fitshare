@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import { FiThumbsUp } from "react-icons/fi";
 import { useState } from 'react';
+import ExercisePhoto from './ExercisePhoto.jpeg';
 
 
 function App() {
@@ -65,6 +66,25 @@ function App() {
             <br></br>
             <div className="Post-content">
               Program
+            </div>
+          </div>
+
+          <div className="Post">
+            <div className="Post-likes">{post.likes}</div>
+            <FiThumbsUp className={"Thumbs-up"}
+
+              style={{ fill: post.liked ? "yellow" : "" }}
+              onClick={() => {
+                if (post.liked) {
+                  setPost({ ...post, likes: post.likes - 1, liked: false })
+                } else {
+                  setPost({ ...post, likes: post.likes + 1, liked: true })
+                }
+              }} />
+            <strong>Gunnhild Pedersen</strong>
+            <br></br>
+            <div className="Post-content">
+              <img src={ExercisePhoto} className="Post-image" alt="Exercise" />
             </div>
           </div>
 
