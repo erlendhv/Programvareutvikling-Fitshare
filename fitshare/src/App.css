@@ -35,6 +35,7 @@
   position: relative;
   width: 100%;
   height: 80%;
+  padding-top: 20px;
   background: #272727;
   display: flex;
   flex-direction: column;
@@ -78,6 +79,83 @@
   background: #252525;
 }
 
+.Post-buttons {
+  position: relative;
+  width: 100%;
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  margin-top: 20px;
+  justify-content: space-around;
+}
+
+.Post-button {
+  position: relative;
+  color: black;
+  line-height: 75px;
+  width: 40%;
+  height: 80px;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  font-weight: bold;
+
+  background: #FFF500;
+  border-radius: 100px;
+
+  filter: drop-shadow(-10px 10px 10px rgba(0, 0, 0, 0.25));
+}
+
+.Group-feed {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Post {
+  position: relative;
+  width: 80%;
+  height: auto;
+  padding: 20px;
+  text-align: left;
+
+  background: #323232;
+}
+
+.Post-likes {
+  position: absolute;
+  font-size: 20px;
+  top: 15px;
+  right: 45px;
+}
+
+.Thumbs-up {
+  position: absolute;
+  font-size: 30px;
+  top: 10px;
+  right: 10px;
+  color: yellow;
+}
+
+.Post-content {
+  position: relative;
+  width: 100%;
+  height: auto;
+  margin: 10px;
+}
+
+.Thumbs-up-clicked {
+  position: absolute;
+  font-size: 30px;
+  top: 10px;
+  right: 10px;
+  color: yellow;
+  fill: yellow;
+}
+
 .Right-side-bar {
   position: absolute;
   width: 25%;
@@ -96,8 +174,10 @@
   line-height: 75px;
   width: 80%;
   height: 80px;
-  margin-top: 60px;
+  margin-top: 50px;
   margin-bottom: 20px;
+
+  font-weight: bold;
 
   background: #FFF500;
   border-radius: 33px;
