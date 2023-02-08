@@ -1,19 +1,5 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -24,15 +10,118 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.Left-side-bar {
+  position: absolute;
+  width: 15%;
+  height: 100%;
+  left: 0px;
+  top: 0px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Home-icon-box {
+  text-align: center;
+  font-size: 50px;
+  color: yellow;
+  line-height: 120px;
+  position: relative;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 15%;
+  background: #383838;
+}
+
+.Groups {
+  position: relative;
+  width: 100%;
+  height: 80%;
+  background: #272727;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Group {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  margin-top: 20px;
+
+  background-color: lightyellow;
+  border: 5px solid #FFF500;
+  filter: drop-shadow(-11px 15px 10px rgba(0, 0, 0, 0.25));
+  border-radius: 90px;
+}
+
+.Middle {
+  position: absolute;
+  width: 70%;
+  height: 100%;
+  left: 15%;
+  background: #484848;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.Right-side-bar {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+  right: 0px;
+  top: 0px;
+  background: #272727;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Programs-button {
+  position: relative;
+  color: black;
+  line-height: 75px;
+  width: 80%;
+  height: 80px;
+  margin-top: 60px;
+  margin-bottom: 20px;
+
+  background: #FFF500;
+  border-radius: 33px;
+
+  filter: drop-shadow(-10px 10px 10px rgba(0, 0, 0, 0.25));
+}
+
+.Friend {
+  position: relative;
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.Friend-profile-pic {
+  position: relative;
+  width: 60px;
+  height: 60px;
+
+  background-color: lightyellow;
+  border: 1px solid black;
+  filter: drop-shadow(-11px 15px 10px rgba(0, 0, 0, 0.25));
+  border-radius: 90px;
+}
+
+.Friend-name {
+  position: relative;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 48px;
+  text-align: center;
+
+  color: #FFFFFF;
 }
