@@ -13,7 +13,7 @@
 
 .Left-side-bar {
   position: absolute;
-  width: 15%;
+  width: 13%;
   height: 100%;
   left: 0px;
   top: 0px;
@@ -41,6 +41,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: auto;
 }
 
 .Group {
@@ -58,13 +59,15 @@
 
 .Middle {
   position: absolute;
-  width: 60%;
+  width: 63%;
   height: 100%;
-  left: 15%;
+  left: 13%;
   background: #484848;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: auto;
+  margin-bottom: 10px;
 }
 
 .Top-bar {
@@ -233,6 +236,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: auto;
 }
 
 

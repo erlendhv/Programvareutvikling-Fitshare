@@ -30,6 +30,24 @@ function App() {
           </div>
           <div className="Group">
           </div>
+          <div className="Group">
+          </div>
+          <div className="Group">
+          </div>
+          <div className="Group">
+          </div>
+          <div className="Group">
+          </div>
+          <div className="Group">
+          </div>
+          <div className="Group">
+          </div>
+          <div className="Group">
+          </div>
+          <div className="Group">
+          </div>
+          <div className="Group">
+          </div>
 
         </div>
       </div>
@@ -67,6 +85,9 @@ function App() {
             <div className="Post-content">
               Program
             </div>
+            <div className="Post-content">
+              <img src={ExercisePhoto} className="Post-image" alt="Exercise" />
+            </div>
           </div>
 
           <div className="Post">
@@ -92,6 +113,97 @@ function App() {
             </div>
           </div>
 
+
+          <div className="Post">
+            <div className="Post-likes">{post.likes}</div>
+            <FiThumbsUp className={"Thumb-icon"}
+
+              style={{ fill: post.liked ? "yellow" : "" }}
+              onClick={() => {
+                if (post.liked) {
+                  setPost({ ...post, likes: post.likes - 1, liked: false })
+                } else {
+                  setPost({ ...post, likes: post.likes + 1, liked: true })
+                }
+              }} />
+            <strong>Gunnhild Pedersen</strong>
+            <br></br>
+            <div className="Post-content">
+              <img src={ExercisePhoto} className="Post-image" alt="Exercise" />
+            </div>
+            <div className="Comment-icon">
+              Comment
+              <AiOutlineComment />
+            </div>
+          </div>
+          <div className="Post">
+            <div className="Post-likes">{post.likes}</div>
+            <FiThumbsUp className={"Thumb-icon"}
+
+              style={{ fill: post.liked ? "yellow" : "" }}
+              onClick={() => {
+                if (post.liked) {
+                  setPost({ ...post, likes: post.likes - 1, liked: false })
+                } else {
+                  setPost({ ...post, likes: post.likes + 1, liked: true })
+                }
+              }} />
+            <strong>Gunnhild Pedersen</strong>
+            <br></br>
+            <div className="Post-content">
+              <img src={ExercisePhoto} className="Post-image" alt="Exercise" />
+            </div>
+            <div className="Comment-icon">
+              Comment
+              <AiOutlineComment />
+            </div>
+          </div>
+
+          <div className="Post">
+            <div className="Post-likes">{post.likes}</div>
+            <FiThumbsUp className={"Thumb-icon"}
+
+              style={{ fill: post.liked ? "yellow" : "" }}
+              onClick={() => {
+                if (post.liked) {
+                  setPost({ ...post, likes: post.likes - 1, liked: false })
+                } else {
+                  setPost({ ...post, likes: post.likes + 1, liked: true })
+                }
+              }} />
+            <strong>Gunnhild Pedersen</strong>
+            <br></br>
+            <div className="Post-content">
+              <img src={ExercisePhoto} className="Post-image" alt="Exercise" />
+            </div>
+            <div className="Comment-icon">
+              Comment
+              <AiOutlineComment />
+            </div>
+          </div>
+
+          <div className="Post">
+            <div className="Post-likes">{post.likes}</div>
+            <FiThumbsUp className={"Thumb-icon"}
+
+              style={{ fill: post.liked ? "yellow" : "" }}
+              onClick={() => {
+                if (post.liked) {
+                  setPost({ ...post, likes: post.likes - 1, liked: false })
+                } else {
+                  setPost({ ...post, likes: post.likes + 1, liked: true })
+                }
+              }} />
+            <strong>Gunnhild Pedersen</strong>
+            <br></br>
+            <div className="Post-content">
+              <img src={ExercisePhoto} className="Post-image" alt="Exercise" />
+            </div>
+            <div className="Comment-icon">
+              Comment
+              <AiOutlineComment />
+            </div>
+          </div>
         </div>
 
       </div>
@@ -106,6 +218,38 @@ function App() {
           <div className="Friend">
             <div className="Friend-profile-pic"></div>
             <div className="Friend-name">Andresen Andersen</div>
+          </div>
+          <div className="Friend">
+            <div className="Friend-profile-pic"></div>
+            <div className="Friend-name">Friend 1</div>
+          </div>
+          <div className="Friend">
+            <div className="Friend-profile-pic"></div>
+            <div className="Friend-name">Friend 1</div>
+          </div>
+          <div className="Friend">
+            <div className="Friend-profile-pic"></div>
+            <div className="Friend-name">Friend 1</div>
+          </div>
+          <div className="Friend">
+            <div className="Friend-profile-pic"></div>
+            <div className="Friend-name">Friend 1</div>
+          </div>
+          <div className="Friend">
+            <div className="Friend-profile-pic"></div>
+            <div className="Friend-name">Friend 1</div>
+          </div>
+          <div className="Friend">
+            <div className="Friend-profile-pic"></div>
+            <div className="Friend-name">Friend 1</div>
+          </div>
+          <div className="Friend">
+            <div className="Friend-profile-pic"></div>
+            <div className="Friend-name">Friend 1</div>
+          </div>
+          <div className="Friend">
+            <div className="Friend-profile-pic"></div>
+            <div className="Friend-name">Friend 1</div>
           </div>
           <div className="Friend">
             <div className="Friend-profile-pic"></div>
