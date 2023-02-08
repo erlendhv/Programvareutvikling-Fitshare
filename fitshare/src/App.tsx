@@ -23,8 +23,8 @@ function App() {
       </div>
       <div className="Middle">
         <div className="Top-bar">
+          Group 1
         </div>
-
       </div>
       <div className="Right-side-bar">
         <div className="Programs-button">
@@ -35,23 +35,23 @@ function App() {
           Friends
 
           <div className="Friend">
-            <div className="Friend-profile-pic">FS</div>
+            <div className="Friend-profile-pic"></div>
+            <div className="Friend-name">Andresen Andersen</div>
+          </div>
+          <div className="Friend">
+            <div className="Friend-profile-pic"></div>
             <div className="Friend-name">Friend 1</div>
           </div>
           <div className="Friend">
-            <div className="Friend-profile-pic">FS</div>
+            <div className="Friend-profile-pic"></div>
             <div className="Friend-name">Friend 1</div>
           </div>
           <div className="Friend">
-            <div className="Friend-profile-pic">FS</div>
+            <div className="Friend-profile-pic"></div>
             <div className="Friend-name">Friend 1</div>
           </div>
           <div className="Friend">
-            <div className="Friend-profile-pic">FS</div>
-            <div className="Friend-name">Friend 1</div>
-          </div>
-          <div className="Friend">
-            <div className="Friend-profile-pic">FS</div>
+            <div className="Friend-profile-pic"></div>
             <div className="Friend-name">Friend 1</div>
           </div>
 

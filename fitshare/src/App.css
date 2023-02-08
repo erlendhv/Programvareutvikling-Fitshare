@@ -43,8 +43,9 @@
 
 .Group {
   position: relative;
-  width: 70px;
-  height: 70px;
+  width: 60%;
+  height: 0;
+  padding-bottom: 60%;
   margin-top: 20px;
 
   background-color: lightyellow;
@@ -55,7 +56,7 @@
 
 .Middle {
   position: absolute;
-  width: 70%;
+  width: 60%;
   height: 100%;
   left: 15%;
   background: #484848;
@@ -64,6 +65,18 @@
   align-items: center;
 }
 
+.Top-bar {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  font-weight: bold;
+  font-size: 30px;
+
+  text-align: center;
+  line-height: 75px;
+
+  background: #252525;
+}
 
 .Right-side-bar {
   position: absolute;
@@ -92,6 +105,17 @@
   filter: drop-shadow(-10px 10px 10px rgba(0, 0, 0, 0.25));
 }
 
+.Friends {
+  position: relative;
+  width: 100%;
+  height: 80%;
+  background: #272727;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
 .Friend {
   position: relative;
   width: 100%;
@@ -99,14 +123,15 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
   margin-top: 20px;
+  margin-left: 10px;
 }
 
 .Friend-profile-pic {
   position: relative;
   width: 60px;
   height: 60px;
+  flex-shrink: 0;
 
   background-color: lightyellow;
   border: 1px solid black;
@@ -119,9 +144,14 @@
 
   font-style: normal;
   font-weight: 400;
-  font-size: 30px;
+  font-size: 100%;
   line-height: 48px;
   text-align: center;
+  margin-left: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
 
   color: #FFFFFF;
 }
