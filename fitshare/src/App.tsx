@@ -5,6 +5,8 @@ import './App.css';
 import ExercisePhoto from './ExercisePhoto.jpeg';
 import FitShareLogo from './FitShareLogo.png';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+
 
 function App() {
 
@@ -87,9 +89,9 @@ function App() {
 
       {/* RIGHT SIDE */}
       <div className="Right-side-bar">
-        <div className="Programs-button">
+        <Link to="/Programs" className="Programs-button">
           Programs
-        </div>
+        </Link>
 
         <div className="Friends">
           <strong>Friends</strong>
