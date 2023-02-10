@@ -8,6 +8,8 @@ import { useState } from 'react';
 
 function App() {
 
+  const [currentGroup, setCurrentGroup] = useState("Group 1");
+
   const [groups, setGroups] = useState([
     { name: "Group 1" },
     { name: "Group 2" },
@@ -35,11 +37,10 @@ function App() {
   ]);
 
   const [posts, setPosts] = useState([
-    { name: "Post 1", program: "Program" },
-    { name: "Post 2", program: "Program" },
-    { name: "Post 3", program: "Program" },
-    { name: "Post 4", program: "Program" },
+    { name: "Gunnhild Pedersen", program: [{ workoutName: "Leg day", exercises: [{ name: "Bench Press", sets: 3, reps: 10 }, { name: "Squat", sets: 3, reps: 10 }] }, { workoutName: "Workout 2", exercises: [{ name: "Bench Press", sets: 3, reps: 10 }, { name: "Squat", sets: 3, reps: 10 }] }], image: ExercisePhoto },
+    { name: "Gunnhild Pedersen", program: [{ workoutName: "Pull", exercises: [{ name: "Bench Press", sets: 3, reps: 10 }, { name: "Squat", sets: 3, reps: 10 }] }, { workoutName: "Workout 2", exercises: [{ name: "Bench Press", sets: 3, reps: 10 }, { name: "Squat", sets: 3, reps: 10 }] }], image: "" },
   ]);
+
 
   return (
     <div className="App">
@@ -62,7 +63,7 @@ function App() {
       {/* MIDDLE */}
       <div className="Middle">
         <div className="Top-bar">
-          Group 1
+          {currentGroup}
         </div>
 
         <div className="Post-buttons">
@@ -78,7 +79,7 @@ function App() {
         <div className="Group-icon-feed">
 
           {posts.map((post) => (
-            <Post name={post.name} program={post.program} image={ExercisePhoto} />
+            <Post name={post.name} program={post.program} image={post.image} />
           ))}
 
         </div>

@@ -173,6 +173,15 @@
   width: 100%;
   height: auto;
   margin: 10px;
+  font-size: 28px;
+}
+
+.Workout {
+  font-size: 22px;
+}
+
+.Exercise {
+  font-size: 17px;
 }
 
 .Post-image {
