@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiThumbsUp } from "react-icons/fi";
 import { AiOutlineComment } from "react-icons/ai";
 
 export function Post(props: {
   id: string, name: string,
   program: { workoutName: string; exercises: { name: string; sets: number; reps: number; }[]; }[],
-  image: string, likes: number, liked: boolean, comments: string[], toggleLiked: (id: string) => void
+  image: string, likes: number, liked: boolean, comments: { person: string; content: string; }[],
+  toggleLiked: (id: string) => void, addComment: (id: string, comment: string) => void
 }) {
 
-
+  const [userComment, setUserComment] = useState("");
 
   return <div className="Post">
     {/* <div className="Post-likes"></div> */}
@@ -43,10 +44,22 @@ export function Post(props: {
 
       {props.image ? <><br></br> <img src={props.image} className="Post-image" alt="Exercise" /></> : ""}
 
-      <div className="Comment-icon">
+      {props.comments.length > 0 ? <><br></br><strong>Comments</strong></> : ""}
+
+      <input className="Comment-input" placeholder="Write a comment!" value={userComment} onChange={(e) => setUserComment(e.target.value)} />
+
+      <div className="Comment-icon" onClick={() => {
+        setUserComment("")
+        props.addComment(props.id, userComment)
+
+      }} >
         Comment
         <AiOutlineComment key={props.id} />
       </div>
+
+      {props.comments.map((comment, key) => (
+        <div key={key} className="Comment-text"><strong>{comment.person}:</strong> {comment.content}</div>
+      ))}
 
     </div>
   </div>;
