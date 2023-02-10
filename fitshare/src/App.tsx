@@ -1,59 +1,102 @@
-import React from 'react';
+import { Post } from './components/Post';
+import { Group } from './components/Group';
+import { Friend } from './components/Friend';
 import './App.css';
+import ExercisePhoto from './ExercisePhoto.jpeg';
+import FitShareLogo from './FitShareLogo.png';
+import { useState } from 'react';
 
 function App() {
+
+  const [currentGroup, setCurrentGroup] = useState("Group 1");
+
+  const [groups, setGroups] = useState([
+    { name: "Group 1" },
+    { name: "Group 2" },
+    { name: "Group 3" },
+    { name: "Group 4" },
+    { name: "Group 5" },
+    { name: "Group 6" },
+    { name: "Group 7" },
+    { name: "Group 8" },
+  ]);
+
+  const [friends, setFriends] = useState([
+    { name: "Friends 1" },
+    { name: "Friends 2" },
+    { name: "Friends 3" },
+    { name: "Friends 4" },
+    { name: "Friends 5" },
+    { name: "Friends 6" },
+    { name: "Friends 7" },
+    { name: "Friends 8" },
+    { name: "Friends 9" },
+    { name: "Friends 10" },
+    { name: "Friends 11" },
+    { name: "Friends 12" },
+  ]);
+
+  const [posts, setPosts] = useState([
+    { name: "Gunnhild Pedersen", program: [{ workoutName: "Leg day", exercises: [{ name: "Bench Press", sets: 3, reps: 10 }, { name: "Squat", sets: 3, reps: 10 }] }, { workoutName: "Workout 2", exercises: [{ name: "Bench Press", sets: 3, reps: 10 }, { name: "Squat", sets: 3, reps: 10 }] }], image: ExercisePhoto },
+    { name: "Gunnhild Pedersen", program: [{ workoutName: "Pull", exercises: [{ name: "Bench Press", sets: 3, reps: 10 }, { name: "Squat", sets: 3, reps: 10 }] }, { workoutName: "Workout 2", exercises: [{ name: "Bench Press", sets: 3, reps: 10 }, { name: "Squat", sets: 3, reps: 10 }] }], image: "" },
+  ]);
+
+
   return (
     <div className="App">
+      {/* LEFT SIDE */}
       <div className="Left-side-bar">
 
-        <div className="Home-icon-box">FS</div>
-        <div className="Groups">
-          Groups
+        <img className="FitSharelogo" src={FitShareLogo}>
 
-          <div className="Group">
-          </div>
-          <div className="Group">
-          </div>
-          <div className="Group">
-          </div>
-          <div className="Group">
-          </div>
+        </img>
+        <div className="Groups">
+          <strong>Groups</strong>
+
+          {groups.map((group) => (
+            <Group name={group.name} />
+          ))}
 
         </div>
       </div>
+
+      {/* MIDDLE */}
       <div className="Middle">
         <div className="Top-bar">
-          Group 1
+          {currentGroup}
+        </div>
+
+        <div className="Post-buttons">
+          <div className="Post-button">
+            Post Program
+          </div>
+
+          <div className="Post-button">
+            Post Image
+          </div>
+        </div>
+
+        <div className="Group-icon-feed">
+
+          {posts.map((post) => (
+            <Post name={post.name} program={post.program} image={post.image} />
+          ))}
+
         </div>
       </div>
+
+      {/* RIGHT SIDE */}
       <div className="Right-side-bar">
         <div className="Programs-button">
           Programs
         </div>
 
         <div className="Friends">
-          Friends
+          <strong>Friends</strong>
 
-          <div className="Friend">
-            <div className="Friend-profile-pic"></div>
-            <div className="Friend-name">Andresen Andersen</div>
-          </div>
-          <div className="Friend">
-            <div className="Friend-profile-pic"></div>
-            <div className="Friend-name">Friend 1</div>
-          </div>
-          <div className="Friend">
-            <div className="Friend-profile-pic"></div>
-            <div className="Friend-name">Friend 1</div>
-          </div>
-          <div className="Friend">
-            <div className="Friend-profile-pic"></div>
-            <div className="Friend-name">Friend 1</div>
-          </div>
-          <div className="Friend">
-            <div className="Friend-profile-pic"></div>
-            <div className="Friend-name">Friend 1</div>
-          </div>
+          {friends.map((friend) => (
+            <Friend name={friend.name} />
+          ))}
 
         </div>
 
