@@ -12,14 +12,11 @@ export function Post(props: {
   const [userComment, setUserComment] = useState("");
 
   return <div className="Post">
-    {/* <div className="Post-likes"></div> */}
     <div className="Post-likes">{props.likes} </div>
-    {/* <input> */}
     <FiThumbsUp key={props.id} className="Thumb-icon"
       style={{ fill: props.liked ? "yellow" : "" }} onClick={() => {
         props.toggleLiked(props.id)
       }} />
-    {/* </input> */}
     <strong>{props.name}</strong>
     <br></br>
     <div className="Post-content">
