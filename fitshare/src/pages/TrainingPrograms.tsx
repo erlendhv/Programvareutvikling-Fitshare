@@ -21,45 +21,6 @@ interface Program {
 
 export function TrainingPrograms() {
 
-  const [currentProgram, setCurrentProgram] = useState<Program>({
-    id: 0,
-    name: "Program 1",
-    workouts: [
-      {
-        name: "Legs",
-        exercises: [
-          {
-            name: "Exercise 1",
-            sets: 3,
-            reps: 10,
-          },
-          {
-            name: "Exercise 2",
-            sets: 3,
-            reps: 10,
-          },
-        ],
-      },
-      {
-        name: "Upper Body",
-        exercises: [
-          {
-            name: "Exercise 1",
-            sets: 3,
-            reps: 10,
-          },
-          {
-            name: "Exercise 2",
-            sets: 3,
-            reps: 10,
-          },
-        ],
-      },
-    ],
-  });
-
-
-
   const [programs, setPrograms] = useState<Program[]>([
     {
       id: 0,
@@ -135,18 +96,44 @@ export function TrainingPrograms() {
     },
   ]);
 
+  const [currentProgram, setCurrentProgram] = useState<Program>(programs[0]);
+
+  const [newProgramName, setNewProgramName] = useState<string>("");
+
+  const addProgram = () => {
+
+    if (newProgramName === "" || programs.find((program) => program.name === newProgramName)) {
+      return;
+    }
+
+    const newProgram: Program = {
+      id: programs.length,
+      name: newProgramName,
+      workouts: [],
+    };
+    setPrograms([...programs, newProgram]);
+
+    setNewProgramName("");
+  };
+
+
   return (
     <div className="TrainingPrograms">
       <div className="Overview">
         <h2>Training Programs</h2>
         <div className="Program-input">
-          <input className="Input-field" placeholder="Name of new program" />
-          <div className="Add-button">Add</div>
+          <input className="Input-field" placeholder="Name of new program"
+            value={newProgramName} onChange={(e) => setNewProgramName(e.target.value)} />
+          <div className="Add-button" onClick={addProgram}>Add</div>
         </div>
 
         {programs.map((program) => (
-          <div className="Option" onClick={() => setCurrentProgram(program)}>{program.name}</div>
+          <div className={currentProgram.id === program.id ? "Option-selected" : "Option"}
+            onClick={() => setCurrentProgram(program)}
+          >{program.name}
+          </div>
         ))}
+
       </div>
       <br></br>
       <div className="Overview">
