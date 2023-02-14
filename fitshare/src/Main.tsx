@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import App from "./pages/App"
-import TrainingPrograms from "./pages/TrainingPrograms";
+import NewProgram from "./pages/NewProgram";
 import Error404page from './pages/Error404page';
 
 const Main = () => {
@@ -11,7 +11,7 @@ const Main = () => {
     <BrowserRouter>
       <Routes> {/* The Switch decides which component to show based on the current URL.*/}
         <Route path="/" element={<App />} />
-        <Route path="/Programs" element={<TrainingPrograms />} />
+        <Route path="/programs" element={<NewProgram />} />
         <Route path="/*" element={<Error404page />} />
       </Routes>
     </BrowserRouter>
