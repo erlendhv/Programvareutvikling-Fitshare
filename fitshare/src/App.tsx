@@ -5,10 +5,16 @@ import './App.css';
 import ExercisePhoto from './ExercisePhoto.jpeg';
 import FitShareLogo from './FitShareLogo.png';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 function App() {
+
+  const navigate = useNavigate();
+
+  const handlePrograms = () => {
+    navigate('/programs');
+  }
 
   const [currentGroup, setCurrentGroup] = useState("Group 1");
 
@@ -89,9 +95,9 @@ function App() {
 
       {/* RIGHT SIDE */}
       <div className="Right-side-bar">
-        <Link to="/Programs" className="Programs-button">
+        <div className="Programs-button" onClick={handlePrograms}>
           Programs
-        </Link>
+        </div>
 
         <div className="Friends">
           <strong>Friends</strong>
