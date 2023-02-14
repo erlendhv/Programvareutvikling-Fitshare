@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom'
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import App from "./App"
+import App from "./pages/App"
 import TrainingPrograms from "./pages/TrainingPrograms";
 import Error404page from './pages/Error404page';
 
