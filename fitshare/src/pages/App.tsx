@@ -1,15 +1,23 @@
-import { Post } from './components/Post';
-import { Group } from './components/Group';
-import { Friend } from './components/Friend';
-import './App.css';
-import ExercisePhoto from './ExercisePhoto.jpeg';
-import FitShareLogo from './FitShareLogo.png';
+import { Post } from '../components/Post';
+import { Group } from '../components/Group';
+import { Friend } from '../components/Friend';
+import './../App.css';
+import ExercisePhoto from './../ExercisePhoto.jpeg';
+import FitShareLogo from './../FitShareLogo.png';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+
 
 function App() {
 
-  const [currentUser, setCurrentUser] = useState("Meg")
+  const [currentUser, setCurrentUser] = useState("Gunnhild Pedersen");
+
+  const navigate = useNavigate();
+
+  const handlePrograms = () => {
+    navigate('/programs');
+  }
 
   const [currentGroup, setCurrentGroup] = useState("Group 1");
 
@@ -120,7 +128,7 @@ function App() {
 
       {/* RIGHT SIDE */}
       <div className="Right-side-bar">
-        <div className="Programs-button">
+        <div className="Programs-button" onClick={handlePrograms}>
           Programs
         </div>
 

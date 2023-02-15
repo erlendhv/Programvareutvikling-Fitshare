@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FiThumbsUp } from "react-icons/fi";
 import { AiOutlineComment } from "react-icons/ai";
 
