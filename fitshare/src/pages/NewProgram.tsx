@@ -66,9 +66,9 @@ export function NewProgram() {
 
   const [newExerciseName, setNewExerciseName] = useState<string>("");
 
-  const [newExerciseSets, setNewExerciseSets] = useState<string>("0");
+  const [newExerciseSets, setNewExerciseSets] = useState<string>("");
 
-  const [newExerciseReps, setNewExerciseReps] = useState<string>("0");
+  const [newExerciseReps, setNewExerciseReps] = useState<string>("");
 
   const addWorkout = () => {
     if (newWorkoutName === "" || workouts.find((workout) => workout.name === newWorkoutName)) {
@@ -106,6 +106,8 @@ export function NewProgram() {
 
     setWorkouts(newWorkouts);
     setNewExerciseName("");
+    setNewExerciseSets("");
+    setNewExerciseReps("");
   };
 
 
@@ -134,8 +136,8 @@ export function NewProgram() {
           <h2>Exercises</h2>
           <div className="Option-input">
             <input className="Input-field" placeholder="New Exercise..." value={newExerciseName} onChange={(e) => setNewExerciseName(e.target.value)} />
-            <input className="Input-field" placeholder="Sets..." value={newExerciseSets} onChange={(e) => setNewExerciseSets(e.target.value)} />
-            <input className="Input-field" placeholder="Reps..." value={newExerciseReps} onChange={(e) => setNewExerciseReps(e.target.value)} />
+            <input className="Input-field" placeholder="Sets" value={newExerciseSets} onChange={(e) => setNewExerciseSets(e.target.value)} />
+            <input className="Input-field" placeholder="Reps" value={newExerciseReps} onChange={(e) => setNewExerciseReps(e.target.value)} />
             <div className="Add-button" onClick={addExercise}>Add</div>
           </div>
           {currentWorkout.exercises.map((exercise) => (
