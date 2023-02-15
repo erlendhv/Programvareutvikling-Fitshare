@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Program } from "../components/Program";
 import './../NewProgram.css';
 import App from "./App";
 import { useNavigate } from 'react-router-dom';

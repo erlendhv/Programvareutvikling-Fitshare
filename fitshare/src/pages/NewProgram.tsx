@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Program } from "../components/Program";
 import './../NewProgram.css';
 import App from "./App";
 import { BiArrowBack } from 'react-icons/bi';
