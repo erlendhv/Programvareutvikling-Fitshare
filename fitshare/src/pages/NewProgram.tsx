@@ -156,7 +156,7 @@ export function NewProgram() {
               // Only allow numbers
               const re = /^[0-9\b]+$/;
               if (e.target.value === '' || re.test(e.target.value)) {
-                setNewExerciseSets(e.target.value)
+                setNewExerciseReps(e.target.value)
               }
             }
             } />
