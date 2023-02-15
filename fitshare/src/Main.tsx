@@ -1,7 +1,4 @@
-import ReactDOM from 'react-dom'
-import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
 import App from "./pages/App"
 import NewProgram from "./pages/NewProgram";
 import TrainingPrograms from "./pages/TrainingPrograms";
