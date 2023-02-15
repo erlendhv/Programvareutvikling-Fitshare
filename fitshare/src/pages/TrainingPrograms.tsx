@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import './../NewProgram.css';
 import { useNavigate } from 'react-router-dom';
 import { BiArrowBack } from 'react-icons/bi';
@@ -118,17 +118,6 @@ export function TrainingPrograms() {
 
   const [currentProgram, setCurrentProgram] = useState<Program | Program>(programs[0]);
 
-  const [newProgramName, setNewProgramName] = useState<string>("");
-
-  const [newWorkoutName, setNewWorkoutName] = useState<string>("");
-
-  const [newExerciseName, setNewExerciseName] = useState<string>("");
-
-  const [newExerciseSets, setNewExerciseSets] = useState<string>("");
-
-  const [newExerciseReps, setNewExerciseReps] = useState<string>("");
-
-
   return (
     <div className="NewProgram">
       <BiArrowBack className="Back-button" onClick={handleBack} />
@@ -140,7 +129,8 @@ export function TrainingPrograms() {
           <div className="Create-new-button" onClick={addProgram}>Create New Program</div>
 
           {programs.map((program, key) => (
-            <div key={key} className="Option" onClick={() => setCurrentProgram(program)}>
+            <div key={key} className={currentProgram.id === program.id ? "Option-selected" : "Option"}
+              onClick={() => setCurrentProgram(program)}>
               {program.name}
             </div>
           ))}

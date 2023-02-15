@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './../NewProgram.css';
 import { BiArrowBack } from 'react-icons/bi';
@@ -131,8 +131,8 @@ export function NewProgram() {
 
           {workouts.map((program, key) => (
             <div key={key} className={currentWorkout.id === program.id ? "Option-selected" : "Option"}
-              onClick={() => setCurrentWorkout(program)}
-            >{program.name}
+              onClick={() => setCurrentWorkout(program)}>
+              {program.name}
             </div>
           ))}
 
