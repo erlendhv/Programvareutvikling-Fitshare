@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Program } from "../components/Program";
 import './../NewProgram.css';
 import App from "./App";
+import { BiArrowBack } from 'react-icons/bi';
 
 interface Excersise {
   name: string;
@@ -21,7 +23,19 @@ interface Program {
   workouts: Workout[];
 }
 
+
+
 export function NewProgram() {
+
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate('/programs');
+  };
+
+  const saveProgram = () => {
+    navigate('/programs');
+  };
 
   const [workouts, setWorkouts] = useState<Workout[]>([
     {
@@ -113,7 +127,8 @@ export function NewProgram() {
 
   return (
     <div className="NewProgram">
-      <input className="New-program-header" placeholder="New Program..." value={newProgramName} onChange={(e) => setNewProgramName(e.target.value)} />
+      <BiArrowBack className="Back-button" onClick={handleBack} />
+      <input className="New-program-header" placeholder="Program name..." value={newProgramName} onChange={(e) => setNewProgramName(e.target.value)} />
       <div className="Overviews">
         <div className="Overview">
           <h2>Workouts</h2>
@@ -123,8 +138,8 @@ export function NewProgram() {
             <div className="Add-button" onClick={addWorkout}>Add</div>
           </div>
 
-          {workouts.map((program) => (
-            <div className={currentWorkout.id === program.id ? "Option-selected" : "Option"}
+          {workouts.map((program, key) => (
+            <div key={key} className={currentWorkout.id === program.id ? "Option-selected" : "Option"}
               onClick={() => setCurrentWorkout(program)}
             >{program.name}
             </div>
@@ -136,12 +151,28 @@ export function NewProgram() {
           <h2>Exercises</h2>
           <div className="Option-input">
             <input className="Input-field" placeholder="New Exercise..." value={newExerciseName} onChange={(e) => setNewExerciseName(e.target.value)} />
-            <input className="Input-field" placeholder="Sets" value={newExerciseSets} onChange={(e) => setNewExerciseSets(e.target.value)} />
-            <input className="Input-field" placeholder="Reps" value={newExerciseReps} onChange={(e) => setNewExerciseReps(e.target.value)} />
+            <input className="Input-field-small" placeholder="Sets" value={newExerciseSets} onChange={(e) => {
+              // Only allow numbers
+              const re = /^[0-9\b]+$/;
+              if (e.target.value === '' || re.test(e.target.value)) {
+                setNewExerciseSets(e.target.value)
+              }
+            }
+            }
+            />
+            X
+            <input className="Input-field-small" placeholder="Reps" value={newExerciseReps} onChange={(e) => {
+              // Only allow numbers
+              const re = /^[0-9\b]+$/;
+              if (e.target.value === '' || re.test(e.target.value)) {
+                setNewExerciseSets(e.target.value)
+              }
+            }
+            } />
             <div className="Add-button" onClick={addExercise}>Add</div>
           </div>
-          {currentWorkout.exercises.map((exercise) => (
-            <div className="Exercise-info">
+          {currentWorkout.exercises.map((exercise, key) => (
+            <div key={key} className="Exercise-info">
               {exercise.name}
               <br></br>
               {exercise.sets} sets of {exercise.reps} reps
@@ -149,6 +180,8 @@ export function NewProgram() {
           ))}
         </div>
       </div >
+      <div className="Save-button" onClick={saveProgram}> Save
+      </div>
     </div>
   );
 }
