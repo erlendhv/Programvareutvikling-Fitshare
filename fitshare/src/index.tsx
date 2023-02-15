@@ -4,7 +4,6 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Main from './Main'
 
-document.body.style.overflow = "hidden";
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

@@ -8,7 +8,6 @@
     color: white;
     user-select: none;
     align-items: center;
-    overflow-y: scroll;
 }
 
 .New-program-header {
@@ -182,6 +181,7 @@
     cursor: pointer;
     align-items: center;
     justify-content: center;
+    margin: 40px;
 
     background: lightgreen;
     border-radius: 90px;
