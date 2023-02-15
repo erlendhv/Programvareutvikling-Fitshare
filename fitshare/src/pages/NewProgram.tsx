@@ -15,13 +15,6 @@ interface Workout {
   exercises: Excersise[];
 }
 
-interface Program {
-  id: number;
-  name: string;
-  workouts: Workout[];
-}
-
-
 
 export function NewProgram() {
 
