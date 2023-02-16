@@ -5,7 +5,6 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import LoginPage from "./pages/LoginPage";
 
-document.body.style.overflow = "hidden";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
