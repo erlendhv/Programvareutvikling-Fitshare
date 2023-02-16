@@ -1,22 +1,27 @@
 import { Post } from '../components/Post';
 import { Group } from '../components/Group';
 import { Friend } from '../components/Friend';
-import './../App.css';
+import './../style/App.css';
 import './../NewProgram.css';
 import ExercisePhoto from './../ExercisePhoto.jpeg';
 import FitShareLogo from './../FitShareLogo.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import {AiOutlineUserAdd} from 'react-icons/ai'
+import { AiOutlineUserAdd } from 'react-icons/ai'
+import { AiOutlineCloseCircle } from 'react-icons/ai'
+import { AiOutlineSearch } from 'react-icons/ai'
+import { AiOutlineUsergroupAdd } from 'react-icons/ai'
+import firebase from "firebase/compat/app"
+interface UserProps {
+  currentUser: firebase.User;
+}
 
+const App: React.FC<UserProps> = ({ currentUser }) => {
 
-function App() {
+  const [isShowingFriendPopUp, setIsShowingFriendPopUp] = useState<boolean>(false);
 
-  const [currentUser, setCurrentUser] = useState("Gunnhild Pedersen");
-
-  const [isShowingPopUp, setIsShowingPopUp] = useState<boolean>(false); 
-
+  const [isShowingGroupPopUp, setIsShowingGroupPopUp] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -78,7 +83,7 @@ function App() {
     const post = newPosts.find(post => post.id === id)
 
     if (post && comment !== "") {
-      post.comments.push({ person: currentUser, content: comment })
+      post.comments.push({ person: currentUser.displayName!, content: comment })
     }
 
     setPosts(newPosts)
@@ -96,7 +101,8 @@ function App() {
         </img>
         <div className="Groups">
           <strong>Groups</strong>
-
+          <AiOutlineUsergroupAdd className="Add-group"
+            onClick={() => { setIsShowingGroupPopUp(true) }} />
           {groups.map((group) => (
             <Group key={group.id} name={group.name} />
           ))}
@@ -120,8 +126,7 @@ function App() {
           </div>
         </div>
 
-        <div className="Group-icon-feed">
-
+        <div className="Group-feed">
           {posts.map((post) => (
             <Post key={post.id} id={post.id} name={post.name} program={post.program} image={post.image}
               likes={post.likes} liked={post.liked} comments={post.comments}
@@ -139,9 +144,9 @@ function App() {
 
         <div className="Friends">
           <strong>Friends</strong>
-          <AiOutlineUserAdd className="Add-friend-button" 
-          onClick={() => {setIsShowingPopUp(true)}}/>
-          
+          <AiOutlineUserAdd className="Add-friend-icon"
+            onClick={() => { setIsShowingFriendPopUp(true) }} />
+
           {friends.map((friend) => (
             <Friend key={friend.id} name={friend.name} />
           ))}
@@ -149,80 +154,62 @@ function App() {
         </div>
 
       </div>
-      
-          {
-            isShowingPopUp ? (
-              <Popup removePopup={() => {setIsShowingPopUp(false)}}/>
-            ) : null
-          }
+
+      {
+        isShowingFriendPopUp || isShowingGroupPopUp ? (
+          <Popup removePopup={() => { setIsShowingFriendPopUp(false); setIsShowingGroupPopUp(false) }} isShowingFriends={isShowingFriendPopUp} />
+        ) : null
+      }
+
     </div>
   );
 }
 
-function Popup(props: {removePopup: any} ) {
+function Popup(props: { removePopup: any, isShowingFriends: boolean }) {
 
   const [searchWord, setSearchWord] = useState("");
 
+  const [friendNames, setFriendNames] = useState([
+    "Gunnhild Pedersen",
+    "Tord",
+    "Man",
+    "Tor",
+    "Herman Hermansen Hermansen",
+    "Tommy",
+    "Gard",
+    "Zebra",
+    "Peder"
+  ])
+
   return (
     <>
-      <div className="Overlay" onClick={props.removePopup}/>
+      <div className="Overlay" onClick={props.removePopup} />
       <div className="Popup">
         <div className="Popup-inner">
-        <button onClick={props.removePopup}>Close</button>
-        <h3>Add Friend</h3>
-        <div className="Popup-content">
-          <input className="Input-field" type="text" placeholder="Search for friends" value={searchWord} onChange={(e) => setSearchWord(e.target.value)} />
-        </div>
-        <div className="Friends-popup">
-          <div className="Friends-popup-inner">
-            <Friend name="Gunnhild Pedersen" />
-            <div className="Add-button">Add</div>
-          </div>
-          
-          <div className="Friends-popup-inner">
-            <Friend name="Gunnhild Pedersen" />
-            <div className="Add-button">Add</div>
+          <AiOutlineCloseCircle className="Friend-close-button" onClick={props.removePopup} />
+          {/* <button className="Friend-close-button" onClick={props.removePopup}>Close</button> */}
+          <h3>Add { }</h3>
+          <div className="Popup-content">
+            <input className="Input-field" type="text" placeholder={`Add ${props.isShowingFriends ? "Friends" : "Groups"}`} value={searchWord} onChange={(e) => setSearchWord(e.target.value)} />
+            <AiOutlineSearch className="Search-for-new-friend" />
           </div>
 
-          <div className="Friends-popup-inner">
-            <Friend name="Gunnhild Pedersen" />
-            <div className="Add-button">Add</div>
-          </div>
+          <div className="Friends-popup">
 
-          <div className="Friends-popup-inner">
-            <Friend name="Gunnhild Pedersen" />
-            <div className="Add-button">Add</div>
-          </div>
+            {props.isShowingFriends ? null :
+              <div className="Friends-popup-inner">
+                <div className="Friend">
+                  <div className="Friend-name">Make new Group</div>
+                </div>
+              </div>
+            }
 
-          <div className="Friends-popup-inner">
-            <Friend name="Gunnhild Pedersen" />
-            <div className="Add-button">Add</div>
-          </div>
-
-          <div className="Friends-popup-inner">
-            <Friend name="Gunnhild Pedersen" />
-            <div className="Add-button">Add</div>
-          </div>
-
-          <div className="Friends-popup-inner">
-            <Friend name="Gunnhild Pedersen" />
-            <div className="Add-button">Add</div>
-          </div>
-
-          <div className="Friends-popup-inner">
-            <Friend name="Gunnhild Pedersen" />
-            <div className="Add-button">Add</div>
-          </div>
-
-          <div className="Friends-popup-inner">
-            <Friend name="Gunnhild Pedersen" />
-            <div className="Add-button">Add</div>
-          </div>
-
-          <div className="Friends-popup-inner">
-            <Friend name="Gunnhild Pedersen" />
-            <div className="Add-button">Add</div>
-          </div>
+            {friendNames.map((friendName) => (
+              <div className="Friends-popup-inner">
+                <Friend name={friendName} />
+                <div className="Add-friend-button">{props.isShowingFriends ? "Add" : "Join"}</div>
+              </div>
+            ))}
           </div>
         </div>
 
