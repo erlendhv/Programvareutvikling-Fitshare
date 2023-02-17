@@ -1,6 +1,7 @@
 import { Post } from '../components/Post';
 import { Group } from '../components/Group';
 import { Friend } from '../components/Friend';
+import { Popup } from '../components/Popup';
 import './../style/App.css';
 import './../NewProgram.css';
 import ExercisePhoto from './../ExercisePhoto.jpeg';
@@ -9,10 +10,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineUserAdd } from 'react-icons/ai'
-import { AiOutlineCloseCircle } from 'react-icons/ai'
-import { AiOutlineSearch } from 'react-icons/ai'
 import { AiOutlineUsergroupAdd } from 'react-icons/ai'
 import firebase from "firebase/compat/app"
+
 interface UserProps {
   currentUser: firebase.User;
 }
@@ -162,59 +162,6 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       }
 
     </div>
-  );
-}
-
-function Popup(props: { removePopup: any, isShowingFriends: boolean }) {
-
-  const [searchWord, setSearchWord] = useState("");
-
-  const [friendNames, setFriendNames] = useState([
-    "Gunnhild Pedersen",
-    "Tord",
-    "Man",
-    "Tor",
-    "Herman Hermansen Hermansen",
-    "Tommy",
-    "Gard",
-    "Zebra",
-    "Peder"
-  ])
-
-  return (
-    <>
-      <div className="Overlay" onClick={props.removePopup} />
-      <div className="Popup">
-        <div className="Popup-inner">
-          <AiOutlineCloseCircle className="Friend-close-button" onClick={props.removePopup} />
-          {/* <button className="Friend-close-button" onClick={props.removePopup}>Close</button> */}
-          <h3>Add { }</h3>
-          <div className="Popup-content">
-            <input className="Input-field" type="text" placeholder={`Add ${props.isShowingFriends ? "Friends" : "Groups"}`} value={searchWord} onChange={(e) => setSearchWord(e.target.value)} />
-            <AiOutlineSearch className="Search-for-new-friend" />
-          </div>
-
-          <div className="Friends-popup">
-
-            {props.isShowingFriends ? null :
-              <div className="Friends-popup-inner">
-                <div className="Friend">
-                  <div className="Friend-name">Make new Group</div>
-                </div>
-              </div>
-            }
-
-            {friendNames.map((friendName) => (
-              <div className="Friends-popup-inner">
-                <Friend name={friendName} />
-                <div className="Add-friend-button">{props.isShowingFriends ? "Add" : "Join"}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-      </div>
-    </>
   );
 }
 
