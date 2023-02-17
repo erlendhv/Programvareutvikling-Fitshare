@@ -1,17 +1,27 @@
 import { Post } from '../components/Post';
 import { Group } from '../components/Group';
 import { Friend } from '../components/Friend';
-import './../App.css';
+import { Popup } from '../components/Popup';
+import './../style/App.css';
+import './../NewProgram.css';
 import ExercisePhoto from './../ExercisePhoto.jpeg';
 import FitShareLogo from './../FitShareLogo.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import { AiOutlineUserAdd } from 'react-icons/ai'
+import { AiOutlineUsergroupAdd } from 'react-icons/ai'
+import firebase from "firebase/compat/app"
 
+interface UserProps {
+  currentUser: firebase.User;
+}
 
-function App() {
+const App: React.FC<UserProps> = ({ currentUser }) => {
 
-  const [currentUser, setCurrentUser] = useState("Gunnhild Pedersen");
+  const [isShowingFriendPopUp, setIsShowingFriendPopUp] = useState<boolean>(false);
+
+  const [isShowingGroupPopUp, setIsShowingGroupPopUp] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -33,18 +43,18 @@ function App() {
   ]);
 
   const [friends, setFriends] = useState([
-    { id: 0, name: "Friends 1" },
-    { id: 1, name: "Friends 2" },
-    { id: 2, name: "Friends 3" },
-    { id: 3, name: "Friends 4" },
-    { id: 4, name: "Friends 5" },
-    { id: 5, name: "Friends 6" },
-    { id: 6, name: "Friends 7" },
-    { id: 7, name: "Friends 8" },
-    { id: 8, name: "Friends 9" },
-    { id: 9, name: "Friends 10" },
-    { id: 10, name: "Friends 11" },
-    { id: 11, name: "Friends 12" },
+    { id: 0, name: "Friend 1" },
+    { id: 1, name: "Friend 2" },
+    { id: 2, name: "Friend 3" },
+    { id: 3, name: "Friend 4" },
+    { id: 4, name: "Friend 5" },
+    { id: 5, name: "Friend 6" },
+    { id: 6, name: "Friend 7" },
+    { id: 7, name: "Friend 8" },
+    { id: 8, name: "Friend 9" },
+    { id: 9, name: "Friend 10" },
+    { id: 10, name: "Friend 11" },
+    { id: 11, name: "Friend 12" },
   ]);
 
   const [posts, setPosts] = useState([
@@ -73,7 +83,7 @@ function App() {
     const post = newPosts.find(post => post.id === id)
 
     if (post && comment !== "") {
-      post.comments.push({ person: currentUser, content: comment })
+      post.comments.push({ person: currentUser.displayName!, content: comment })
     }
 
     setPosts(newPosts)
@@ -91,7 +101,8 @@ function App() {
         </img>
         <div className="Groups">
           <strong>Groups</strong>
-
+          <AiOutlineUsergroupAdd className="Add-group"
+            onClick={() => { setIsShowingGroupPopUp(true) }} />
           {groups.map((group) => (
             <Group key={group.id} name={group.name} />
           ))}
@@ -115,8 +126,7 @@ function App() {
           </div>
         </div>
 
-        <div className="Group-icon-feed">
-
+        <div className="Group-feed">
           {posts.map((post) => (
             <Post key={post.id} id={post.id} name={post.name} program={post.program} image={post.image}
               likes={post.likes} liked={post.liked} comments={post.comments}
@@ -134,6 +144,8 @@ function App() {
 
         <div className="Friends">
           <strong>Friends</strong>
+          <AiOutlineUserAdd className="Add-friend-icon"
+            onClick={() => { setIsShowingFriendPopUp(true) }} />
 
           {friends.map((friend) => (
             <Friend key={friend.id} name={friend.name} />
@@ -142,6 +154,13 @@ function App() {
         </div>
 
       </div>
+
+      {
+        isShowingFriendPopUp || isShowingGroupPopUp ? (
+          <Popup removePopup={() => { setIsShowingFriendPopUp(false); setIsShowingGroupPopUp(false) }} isShowingFriends={isShowingFriendPopUp} />
+        ) : null
+      }
+
     </div>
   );
 }

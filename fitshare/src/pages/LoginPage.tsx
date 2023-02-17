@@ -27,9 +27,31 @@ const analytics: firebase.analytics.Analytics = firebase.analytics();
 const LoginPage: React.FC = () => {
   const [user] = useAuthState(auth as any);
 
+  // check if the current user exists in Firestore
+  const checkUserExists = async () => {
+    const usersCollection = firestore.collection("users");
+    const currentUserDoc = usersCollection.doc(user!.uid);
+    const currentUserSnapshot = await currentUserDoc.get();
+
+    if (!currentUserSnapshot.exists) {
+      // current user does not exist, create a new user document
+      const userData = {
+        id: user!.uid,
+        displayName: user!.displayName,
+        friends: [],
+        programs: [],
+        posts: [],
+        groups: [],
+
+      };
+      await currentUserDoc.set(userData);
+    }
+  };
+
+  checkUserExists();
   return (
     <div className="LoginPage">
-      <section>{user ? <Main /> : <SignIn />}</section>
+      <section>{user ? <Main currentUser={user as firebase.User} /> : <SignIn />}</section>
     </div>
   );
 };
@@ -41,8 +63,8 @@ function SignIn() {
   };
   return (
     <div className="sign-in">
-      <h1>FitShare</h1>
-      <button onClick={signInWithGoogle}> Sign in with Google</button>
+      <h1 className="header">FitShare</h1>
+      <button className="Sign-in-button" onClick={signInWithGoogle}> Sign in with Google</button>
     </div>
   );
 }

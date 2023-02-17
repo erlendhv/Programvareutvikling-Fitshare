@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import './../NewProgram.css';
 import { BiArrowBack } from 'react-icons/bi';
 
+
 interface Excersise {
   name: string;
   sets: number;
@@ -92,7 +93,7 @@ export function NewProgram() {
   };
 
   const addExercise = () => {
-    if (newExerciseName === "") {
+    if (newExerciseName === "" || newExerciseSets === "" || newExerciseReps === "") {
       return;
     }
 
