@@ -3,7 +3,7 @@ import { Group } from '../components/Group';
 import { Friend } from '../components/Friend';
 import { Popup } from '../components/Popup';
 import './../style/App.css';
-import './../NewProgram.css';
+import './../style/NewProgram.css';
 import ExercisePhoto from './../ExercisePhoto.jpeg';
 import FitShareLogo from './../FitShareLogo.png';
 import { useState, useEffect, Key } from 'react';
