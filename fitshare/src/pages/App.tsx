@@ -102,16 +102,25 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
   const [friendsData, setFriendsData] = useState<any>(null);
 
   useEffect(() => {
+    let unsubscribe: firebase.Unsubscribe | undefined;
     if (currentUserData) {
-      const friendsRef = firebase.firestore().collection("users").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.friends);
-      const unsubscribe = friendsRef.onSnapshot((querySnapshot) => {
-        const friends: any = [];
-        querySnapshot.forEach((doc) => {
-          friends.push(doc.data());
+      if (currentUserData.friends.length > 0) {
+        
+        const friendsRef = firebase.firestore().collection("users").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.friends);
+        unsubscribe = friendsRef.onSnapshot((querySnapshot) => {
+          const friends: any = [];
+          querySnapshot.forEach((doc) => {
+            friends.push(doc.data());
+          });
+          setFriendsData(friends);
         });
-        setFriendsData(friends);
-      });
-      return () => unsubscribe();
+      }
+      else {
+        setFriendsData([]);
+      }
+        return () => {
+          if (unsubscribe) unsubscribe();
+        };
     }
   }, [currentUserData]);
 
