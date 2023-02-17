@@ -6,12 +6,14 @@ import './../style/App.css';
 import './../NewProgram.css';
 import ExercisePhoto from './../ExercisePhoto.jpeg';
 import FitShareLogo from './../FitShareLogo.png';
-import { useState } from 'react';
+import { useState, useEffect, Key } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineUserAdd } from 'react-icons/ai'
 import { AiOutlineUsergroupAdd } from 'react-icons/ai'
 import firebase from "firebase/compat/app"
+import { useDocumentData, useCollectionData  } from "react-firebase-hooks/firestore";
+
 
 interface UserProps {
   currentUser: firebase.User;
@@ -89,7 +91,38 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     setPosts(newPosts)
     console.log(newPosts)
   }
+  // This is to get data about currentuser's friends
+  // ref to current user in users collection firebase
+  const currentUserRef = firebase.firestore().collection("users").doc(currentUser.uid);
+  const [currentUserData] = useDocumentData(currentUserRef as any);
+  /*
+  const friendsRef = currentUserData ? firebase.firestore().collection("users").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.friends) : null;
+  const [friendsData] = useCollectionData(friendsRef as any);
+  */
+  const [friendsData, setFriendsData] = useState<any>(null);
 
+  useEffect(() => {
+    let unsubscribe: firebase.Unsubscribe | undefined;
+    if (currentUserData) {
+      if (currentUserData.friends.length > 0) {
+        
+        const friendsRef = firebase.firestore().collection("users").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.friends);
+        unsubscribe = friendsRef.onSnapshot((querySnapshot) => {
+          const friends: any = [];
+          querySnapshot.forEach((doc) => {
+            friends.push(doc.data());
+          });
+          setFriendsData(friends);
+        });
+      }
+      else {
+        setFriendsData([]);
+      }
+        return () => {
+          if (unsubscribe) unsubscribe();
+        };
+    }
+  }, [currentUserData]);
 
   return (
     <div className="App">
@@ -146,10 +179,11 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           <strong>Friends</strong>
           <AiOutlineUserAdd className="Add-friend-icon"
             onClick={() => { setIsShowingFriendPopUp(true) }} />
-
-          {friends.map((friend) => (
-            <Friend key={friend.id} name={friend.name} />
-          ))}
+          {/*
+          */}
+          {friendsData ? friendsData.map((friend: any) => (
+            <Friend key={friend.id} name={friend.displayName} />
+          )) : null}
 
         </div>
 
@@ -157,7 +191,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
 
       {
         isShowingFriendPopUp || isShowingGroupPopUp ? (
-          <Popup removePopup={() => { setIsShowingFriendPopUp(false); setIsShowingGroupPopUp(false) }} isShowingFriends={isShowingFriendPopUp} />
+          <Popup removePopup={() => { setIsShowingFriendPopUp(false); setIsShowingGroupPopUp(false) }} isShowingFriends={isShowingFriendPopUp} currentUser={currentUser} />
         ) : null
       }
 
