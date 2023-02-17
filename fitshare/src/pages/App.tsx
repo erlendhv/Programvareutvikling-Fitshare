@@ -6,7 +6,7 @@ import './../style/App.css';
 import './../NewProgram.css';
 import ExercisePhoto from './../ExercisePhoto.jpeg';
 import FitShareLogo from './../FitShareLogo.png';
-import { useState } from 'react';
+import { useState, useEffect, Key } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineUserAdd } from 'react-icons/ai'
@@ -91,14 +91,29 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     setPosts(newPosts)
     console.log(newPosts)
   }
+  // This is to get data about currentuser's friends
   // ref to current user in users collection firebase
   const currentUserRef = firebase.firestore().collection("users").doc(currentUser.uid);
   const [currentUserData] = useDocumentData(currentUserRef as any);
+  /*
   const friendsRef = currentUserData ? firebase.firestore().collection("users").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.friends) : null;
   const [friendsData] = useCollectionData(friendsRef as any);
-  /*
   */
-  console.log("88888888888888888888888888888888888888")
+  const [friendsData, setFriendsData] = useState<any>(null);
+
+  useEffect(() => {
+    if (currentUserData) {
+      const friendsRef = firebase.firestore().collection("users").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.friends);
+      const unsubscribe = friendsRef.onSnapshot((querySnapshot) => {
+        const friends: any = [];
+        querySnapshot.forEach((doc) => {
+          friends.push(doc.data());
+        });
+        setFriendsData(friends);
+      });
+      return () => unsubscribe();
+    }
+  }, [currentUserData]);
 
   return (
     <div className="App">
@@ -157,7 +172,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
             onClick={() => { setIsShowingFriendPopUp(true) }} />
           {/*
           */}
-          {friendsData ? friendsData.map((friend) => (
+          {friendsData ? friendsData.map((friend: any) => (
             <Friend key={friend.id} name={friend.displayName} />
           )) : null}
 
