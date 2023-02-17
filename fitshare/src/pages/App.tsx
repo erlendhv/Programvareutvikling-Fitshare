@@ -12,6 +12,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineUserAdd } from 'react-icons/ai'
 import { AiOutlineUsergroupAdd } from 'react-icons/ai'
 import firebase from "firebase/compat/app"
+import { useDocumentData, useCollectionData  } from "react-firebase-hooks/firestore";
+
 
 interface UserProps {
   currentUser: firebase.User;
@@ -89,7 +91,14 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     setPosts(newPosts)
     console.log(newPosts)
   }
-
+  // ref to current user in users collection firebase
+  const currentUserRef = firebase.firestore().collection("users").doc(currentUser.uid);
+  const [currentUserData] = useDocumentData(currentUserRef as any);
+  const friendsRef = currentUserData ? firebase.firestore().collection("users").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.friends) : null;
+  const [friendsData] = useCollectionData(friendsRef as any);
+  /*
+  */
+  console.log("88888888888888888888888888888888888888")
 
   return (
     <div className="App">
@@ -146,10 +155,11 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           <strong>Friends</strong>
           <AiOutlineUserAdd className="Add-friend-icon"
             onClick={() => { setIsShowingFriendPopUp(true) }} />
-
-          {friends.map((friend) => (
-            <Friend key={friend.id} name={friend.name} />
-          ))}
+          {/*
+          */}
+          {friendsData ? friendsData.map((friend) => (
+            <Friend key={friend.id} name={friend.displayName} />
+          )) : null}
 
         </div>
 

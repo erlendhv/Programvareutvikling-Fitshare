@@ -79,7 +79,7 @@ export function Popup(props: { removePopup: any, isShowingFriends: boolean, curr
                         {users.map((user) => (
                             <div className="Friends-popup-inner">
                                 <Friend name={user.displayName} />
-                                <div className="Add-friend-button">{props.isShowingFriends ? "Add" : "Join"}</div>
+                                <div className="Add-friend-button" onClick={() => handleAddFriend(user.id)}>{props.isShowingFriends ? "Add" : "Join"}</div>
                             </div>
                         ))}
                     </div>
