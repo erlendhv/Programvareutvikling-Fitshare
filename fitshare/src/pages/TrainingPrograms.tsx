@@ -1,5 +1,5 @@
 import { useState } from "react";
-import './../NewProgram.css';
+import './../style/NewProgram.css';
 import { useNavigate } from 'react-router-dom';
 import { BiArrowBack } from 'react-icons/bi';
 
