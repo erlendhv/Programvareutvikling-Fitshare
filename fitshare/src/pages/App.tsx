@@ -87,8 +87,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     let unsubscribe: firebase.Unsubscribe | undefined;
     if (currentUserData) {
       if (currentUserData.groups.length > 0) {
-        const groupsRef = firebase.firestore().collection("users").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.groups);
-        console.log(groupsRef);
+        const groupsRef = firebase.firestore().collection("groups").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.groups);
         unsubscribe = groupsRef.onSnapshot((querySnapshot) => {
           const groups: any = [];
           querySnapshot.forEach((doc) => {
@@ -111,7 +110,6 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     if (currentUserData) {
       if (currentUserData.friends.length > 0) {
         const friendsRef = firebase.firestore().collection("users").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.friends);
-        console.log(friendsRef);
         unsubscribe = friendsRef.onSnapshot((querySnapshot) => {
           const friends: any = [];
           querySnapshot.forEach((doc) => {
