@@ -11,7 +11,7 @@ import "firebase/compat/analytics";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { uuidv4 } from '@firebase/util';
+import { v4 as uuidv4 } from 'uuid';
 
 
 interface GroupData {
