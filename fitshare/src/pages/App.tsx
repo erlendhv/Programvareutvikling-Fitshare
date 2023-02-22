@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineUserAdd } from 'react-icons/ai'
 import { AiOutlineUsergroupAdd } from 'react-icons/ai'
 import firebase from "firebase/compat/app"
-import { useDocumentData, useCollectionData  } from "react-firebase-hooks/firestore";
+import { useDocumentData, useCollectionData } from "react-firebase-hooks/firestore";
 
 
 interface UserProps {
@@ -32,32 +32,6 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
   }
 
   const [currentGroup, setCurrentGroup] = useState("Group 1");
-
-  const [groups, setGroups] = useState([
-    { id: 0, name: "Group 1" },
-    { id: 1, name: "Group 2" },
-    { id: 2, name: "Group 3" },
-    { id: 3, name: "Group 4" },
-    { id: 4, name: "Group 5" },
-    { id: 5, name: "Group 6" },
-    { id: 6, name: "Group 7" },
-    { id: 7, name: "Group 8" },
-  ]);
-
-  const [friends, setFriends] = useState([
-    { id: 0, name: "Friend 1" },
-    { id: 1, name: "Friend 2" },
-    { id: 2, name: "Friend 3" },
-    { id: 3, name: "Friend 4" },
-    { id: 4, name: "Friend 5" },
-    { id: 5, name: "Friend 6" },
-    { id: 6, name: "Friend 7" },
-    { id: 7, name: "Friend 8" },
-    { id: 8, name: "Friend 9" },
-    { id: 9, name: "Friend 10" },
-    { id: 10, name: "Friend 11" },
-    { id: 11, name: "Friend 12" },
-  ]);
 
   const [posts, setPosts] = useState([
     { id: uuidv4(), name: "Gunnhild Pedersen", program: [{ workoutName: "Leg day", exercises: [{ name: "Bench Press", sets: 3, reps: 10 }, { name: "Squat", sets: 3, reps: 10 }] }, { workoutName: "Workout 2", exercises: [{ name: "Bench Press", sets: 3, reps: 10 }, { name: "Squat", sets: 3, reps: 10 }] }], image: ExercisePhoto, likes: 0, liked: false, comments: [{ person: "Roger", content: "Thats crazy!" }, { person: "Roger", content: "No way!" }, { person: "Kenneth", content: "That is the most crazy thing I have ever seen in my entire life! I really hope I can look just like you in the future! You are the person I dream of being in my sleep!" }, { person: "Sen", content: "I want you!" }] },
@@ -89,7 +63,6 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     }
 
     setPosts(newPosts)
-    console.log(newPosts)
   }
   // This is to get data about currentuser's friends
   // ref to current user in users collection firebase
@@ -100,13 +73,18 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
   const [friendsData] = useCollectionData(friendsRef as any);
   */
   const [friendsData, setFriendsData] = useState<any>(null);
+  const [groupsData, setGroupsData] = useState<any>(null);
 
   useEffect(() => {
+
+
     let unsubscribe: firebase.Unsubscribe | undefined;
+
     if (currentUserData) {
       if (currentUserData.friends.length > 0) {
-        
+
         const friendsRef = firebase.firestore().collection("users").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.friends);
+
         unsubscribe = friendsRef.onSnapshot((querySnapshot) => {
           const friends: any = [];
           querySnapshot.forEach((doc) => {
@@ -118,11 +96,30 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       else {
         setFriendsData([]);
       }
-        return () => {
-          if (unsubscribe) unsubscribe();
-        };
+
+      if (currentUserData.groups.length > 0) {
+
+        const groupsRef = firebase.firestore().collection("groups").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.groups);
+
+        unsubscribe = groupsRef.onSnapshot((querySnapshot) => {
+          const groups: any = [];
+          querySnapshot.forEach((doc) => {
+            groups.push(doc.data());
+          });
+          setGroupsData(groups);
+        }
+        );
+      }
+      else {
+        setGroupsData([]);
+      }
+
+      return () => {
+        if (unsubscribe) unsubscribe();
+      };
     }
   }, [currentUserData]);
+
 
   return (
     <div className="App">
@@ -136,9 +133,9 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           <strong>Groups</strong>
           <AiOutlineUsergroupAdd className="Add-group"
             onClick={() => { setIsShowingGroupPopUp(true) }} />
-          {groups.map((group) => (
+          {groupsData ? groupsData.map((group: any) => (
             <Group key={group.id} name={group.name} />
-          ))}
+          )) : null}
 
         </div>
       </div>
