@@ -40,6 +40,8 @@ export function Popup(props: { removePopup: any, isShowingFriends: boolean, curr
 
     const [groups, setGroups] = useState<GroupData[]>([]);
 
+    const [showFriendAdded, setShowPopup] = useState(false);
+
     const fetchGroups = async () => {
         const groupCollection = firebase.firestore().collection("groups");
         const querySnapshot = await groupCollection.where('name', '>=', searchWord).get();
@@ -85,6 +87,7 @@ export function Popup(props: { removePopup: any, isShowingFriends: boolean, curr
         setUsers(mathingUsers);
     };
 
+
     const handleAddFriend = async (friendId: string) => {
         const currentUserRef = firebase.firestore().collection("users").doc(props.currentUser.uid);
         await currentUserRef.update({
@@ -99,17 +102,21 @@ export function Popup(props: { removePopup: any, isShowingFriends: boolean, curr
     };
 
     const handleJoinGroup = async (groupId: string) => {
-        const currentGroupRef = firebase.firestore().collection("groups").doc(groupId);
-        await currentGroupRef.update({
-            members: firebase.firestore.FieldValue.arrayUnion(props.currentUser.uid)
-        });
+
+        // Add group to user
         const currentUserRef = firebase.firestore().collection("users").doc(props.currentUser.uid);
-        await currentUserRef.update({
+        currentUserRef.update({
             groups: firebase.firestore.FieldValue.arrayUnion(groupId)
         });
 
-        props.removePopup();
-        console.log("Friend added");
+        // Add user to group
+        const groupRef = firebase.firestore().collection("groups").doc(groupId);
+        groupRef.update({
+            members: firebase.firestore.FieldValue.arrayUnion(props.currentUser.uid)
+        });
+
+        console.log("Group joined");
+
     };
 
     return (
@@ -137,19 +144,11 @@ export function Popup(props: { removePopup: any, isShowingFriends: boolean, curr
                         {
                             props.isShowingFriends ?
 
-
-
-                                // {users.map((user) => ('
-                                //     <div className="Friends-popup-inner">
-                                //         <Friend name={user.displayName} />
-                                //         <div className="Add-friend-button" onClick={() => handleAddFriend(user.id)}>{props.isShowingFriends ? "Add" : "Join"}</div>'
-
-
-                                users.map((user) => (
+                                users.map((user, key) => (
                                     <>
                                         {
                                             user.displayName.toLowerCase().includes(searchWord.toLowerCase()) ?
-                                                <div className="Friends-popup-inner">
+                                                <div key={key} className="Friends-popup-inner">
                                                     <Friend name={user.displayName} />
                                                     <div className="Add-friend-button" onClick={() => handleAddFriend(user.id)}>Add</div>
                                                 </div>
