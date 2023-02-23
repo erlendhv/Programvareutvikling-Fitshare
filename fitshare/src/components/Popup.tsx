@@ -56,7 +56,7 @@ export function Popup(props: { removePopup: any, isShowingFriends: boolean, curr
         setGroups(matchingGroups);
     }
 
-    const makeNewGroup = () => {
+    const makeNewGroup = async () => {
         const groupCollection = firebase.firestore().collection("groups");
         setClassState("Made-new-group")
         if (searchWord == "") {
@@ -69,23 +69,8 @@ export function Popup(props: { removePopup: any, isShowingFriends: boolean, curr
             members: [props.currentUser.uid],
             admin: props.currentUser.uid
         }
-
-        const newGroupID = groupCollection.add(newGroup);
-
-        newGroupID.then((docRef) => {
-            // Add group to user
-            const currentUserRef = firebase.firestore().collection("users").doc(props.currentUser.uid);
-            currentUserRef.update({
-                groups: firebase.firestore.FieldValue.arrayUnion(docRef.id)
-            });
-        });
-
-        // Add user to group
-        const groupRef = firebase.firestore().collection("groups").doc(newGroup.name);
-        groupRef.update({
-            members: firebase.firestore.FieldValue.arrayUnion(props.currentUser.uid)
-        });
-
+        groupCollection.doc(newGroup.id).set(newGroup);
+        handleJoinGroup(newGroup.id);
         props.removePopup();
     }
 
@@ -108,6 +93,11 @@ export function Popup(props: { removePopup: any, isShowingFriends: boolean, curr
         await currentUserRef.update({
             friends: firebase.firestore.FieldValue.arrayUnion(friendId)
         });
+        const friendRef = firebase.firestore().collection("users").doc(friendId);
+        await friendRef.update({
+            friends: firebase.firestore.FieldValue.arrayUnion(props.currentUser.uid)
+        });
+        props.removePopup();
         console.log("Friend added");
     };
 

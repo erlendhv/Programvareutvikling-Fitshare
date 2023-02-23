@@ -1,24 +1,29 @@
-import { Post } from "../components/Post";
-import { Group } from "../components/Group";
-import { Friend } from "../components/Friend";
-import { Popup } from "../components/Popup";
-import "./../style/App.css";
-import "./../style/NewProgram.css";
-import ExercisePhoto from "./../ExercisePhoto.jpeg";
-import FitShareLogo from "./../FitShareLogo.png";
-import { useState, useEffect, Key } from "react";
-import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
-import { AiOutlineUserAdd } from "react-icons/ai";
-import { AiOutlineUsergroupAdd } from "react-icons/ai";
-import firebase from "firebase/compat/app";
-import {
-  useDocumentData,
-  useCollectionData,
-} from "react-firebase-hooks/firestore";
+import { Post } from '../components/Post';
+import { Group } from '../components/Group';
+import { Friend } from '../components/Friend';
+import { Popup } from '../components/Popup';
+import './../style/App.css';
+import './../style/NewProgram.css';
+import ExercisePhoto from './../ExercisePhoto.jpeg';
+import FitShareLogo from './../FitShareLogo.png';
+import { useState, useEffect, Key } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import { AiOutlineUserAdd } from 'react-icons/ai'
+import { AiOutlineUsergroupAdd } from 'react-icons/ai'
+import firebase from "firebase/compat/app"
+import { useDocumentData, useCollectionData } from "react-firebase-hooks/firestore";
+
 
 interface UserProps {
   currentUser: firebase.User;
+}
+
+interface GroupData {
+  id: string;
+  name: string;
+  members: string[];
+  admin: string;
 }
 
 const App: React.FC<UserProps> = ({ currentUser }) => {
