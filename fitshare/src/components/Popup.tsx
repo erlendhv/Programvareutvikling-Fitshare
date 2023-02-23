@@ -115,27 +115,13 @@ export function Popup(props: { removePopup: any, isShowingFriends: boolean, curr
 
         // Add group to user
         const currentUserRef = firebase.firestore().collection("users").doc(props.currentUser.uid);
-
-        const groupID = await currentUserRef.get().then((doc) => {
-            if (doc.exists) {
-                return doc.data()?.groups;
-            } else {
-                console.log("No such document!");
-            }
-        });
-
-        if (groupID?.includes(groupId)) {
-            console.log("Group already joined");
-            return;
-        }
-
-        await currentUserRef.update({
+        currentUserRef.update({
             groups: firebase.firestore.FieldValue.arrayUnion(groupId)
         });
 
         // Add user to group
         const groupRef = firebase.firestore().collection("groups").doc(groupId);
-        await groupRef.update({
+        groupRef.update({
             members: firebase.firestore.FieldValue.arrayUnion(props.currentUser.uid)
         });
 
