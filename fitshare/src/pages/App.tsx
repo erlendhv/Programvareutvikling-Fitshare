@@ -26,6 +26,46 @@ interface GroupData {
   admin: string;
 }
 
+interface Exercise {
+  name: string;
+  sets: number;
+  reps: number;
+  id: string;
+}
+
+interface Workout {
+  id: string;
+  name: string;
+  exercises: Exercise[];
+}
+
+interface Program {
+  owner: string;
+  id: string;
+  name: string;
+  workouts: String[];
+}
+
+interface Post {
+  id: string;
+  name: string;
+  // program: Program;
+  program: {
+    workoutName: string;
+    exercises: {
+      name: string;
+      sets: number;
+      reps: number;
+    }[];
+  }[];
+  timeStamp: firebase.firestore.Timestamp;
+  likes: number;
+  likedBy: string[];
+  owner: string;
+  caption?: string;
+  image?: string;
+}
+
 const App: React.FC<UserProps> = ({ currentUser }) => {
   const [isShowingFriendPopUp, setIsShowingFriendPopUp] =
     useState<boolean>(false);
@@ -39,7 +79,15 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     navigate("/programs");
   };
 
-  const [currentGroup, setCurrentGroup] = useState("Group 1");
+  const [inGroupFeed, setInGroupFeed] = useState<boolean>(false);
+
+
+  const handleSetCurrentPage = (group: GroupData) => {
+    setInGroupFeed(true);
+    setCurrentPageName(group.name)
+  }
+
+  const [currentPageName, setCurrentPageName] = useState<string>("Homepage");
 
   const [posts, setPosts] = useState([
     {
@@ -138,8 +186,57 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     .doc(currentUser.uid);
   const [currentUserData] = useDocumentData(currentUserRef as any);
 
+  useEffect(() => {
+    let friendsUnsubscribe: firebase.Unsubscribe | undefined;
+
+    if (currentUserData) {
+      if (currentUserData.friends.length > 0) {
+        const friendsRef = firebase
+          .firestore()
+          .collection("users")
+          .where(
+            firebase.firestore.FieldPath.documentId(),
+            "in",
+            currentUserData.friends
+          );
+        const friends: any = [];
+        const friendPosts: any = [];
+
+        friendsUnsubscribe = friendsRef.onSnapshot((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            friends.push(doc.data());
+          });
+
+        });
+
+        friends.forEach((friend: any) => {
+          const friendPostsRef = firebase
+            .firestore()
+            .collection("users")
+            .doc(friend.id)
+            .collection("posts");
+
+          friendPostsRef.onSnapshot((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              friendPosts.push(doc.data());
+            });
+          });
+        });
+        console.log(friendPosts);
+        // setPosts([...posts, friendPosts]);
+      } else {
+        // setPosts([...posts]);
+      }
+      return () => {
+        if (friendsUnsubscribe) friendsUnsubscribe();
+      };
+    }
+  }, [currentUserData]);
+
+
   const [friendsData, setFriendsData] = useState<any>(null);
   const [groupsData, setGroupsData] = useState<any>(null);
+
 
   useEffect(() => {
     let friendsUnsubscribe: firebase.Unsubscribe | undefined;
@@ -194,7 +291,6 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       };
     }
   }, [currentUserData]);
-
   return (
     <div className="App">
       {/* LEFT SIDE */}
@@ -213,16 +309,17 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
             }}
           />
           {groupsData
-            ? groupsData.map((group: any) => (
-              <Group key={group.id} name={group.name} />
-              ))
+            ? groupsData.map((group: GroupData) => (
+              <Group key={group.id} name={group.name}
+                onClick={() => handleSetCurrentPage(group)} />
+            ))
             : null}
         </div>
       </div>
 
       {/* MIDDLE */}
       <div className="Middle">
-        <div className="Top-bar">{currentGroup}</div>
+        <div className="Top-bar">{currentPageName}</div>
 
         <div className="Post-buttons">
           <div className="Post-button">Post Program</div>
@@ -265,7 +362,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           {friendsData
             ? friendsData.map((friend: any) => (
               <Friend key={friend.id} name={friend.displayName} />
-              ))
+            ))
             : null}
         </div>
       </div>
