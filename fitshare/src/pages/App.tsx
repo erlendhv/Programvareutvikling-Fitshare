@@ -1,19 +1,21 @@
-import { Post } from '../components/Post';
-import { Group } from '../components/Group';
-import { Friend } from '../components/Friend';
-import { Popup } from '../components/Popup';
-import './../style/App.css';
-import './../style/NewProgram.css';
-import ExercisePhoto from './../ExercisePhoto.jpeg';
-import FitShareLogo from './../FitShareLogo.png';
-import { useState, useEffect, Key } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
-import { AiOutlineUserAdd } from 'react-icons/ai'
-import { AiOutlineUsergroupAdd } from 'react-icons/ai'
-import firebase from "firebase/compat/app"
-import { useDocumentData, useCollectionData } from "react-firebase-hooks/firestore";
-
+import { Post } from "../components/Post";
+import { Group } from "../components/Group";
+import { Friend } from "../components/Friend";
+import { Popup } from "../components/Popup";
+import "./../style/App.css";
+import "./../style/NewProgram.css";
+import ExercisePhoto from "./../ExercisePhoto.jpeg";
+import FitShareLogo from "./../FitShareLogo.png";
+import { useState, useEffect, Key } from "react";
+import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import { AiOutlineUserAdd } from "react-icons/ai";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import firebase from "firebase/compat/app";
+import {
+  useDocumentData,
+  useCollectionData,
+} from "react-firebase-hooks/firestore";
 
 interface UserProps {
   currentUser: firebase.User;
@@ -37,6 +39,10 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
 
   const handlePrograms = () => {
     navigate("/programs");
+  };
+
+  const handlePost = () => {
+    navigate("/newpost");
   };
 
   const [currentGroup, setCurrentGroup] = useState("Group 1");
@@ -214,7 +220,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           />
           {groupsData
             ? groupsData.map((group: any) => (
-              <Group key={group.id} name={group.name} />
+                <Group key={group.id} name={group.name} />
               ))
             : null}
         </div>
@@ -224,10 +230,8 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       <div className="Middle">
         <div className="Top-bar">{currentGroup}</div>
 
-        <div className="Post-buttons">
-          <div className="Post-button">Post Program</div>
-
-          <div className="Post-button">Post Image</div>
+        <div className="Post-button" onClick={handlePost}>
+          Create Post
         </div>
 
         <div className="Group-feed">
@@ -264,7 +268,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           />
           {friendsData
             ? friendsData.map((friend: any) => (
-              <Friend key={friend.id} name={friend.displayName} />
+                <Friend key={friend.id} name={friend.displayName} />
               ))
             : null}
         </div>
