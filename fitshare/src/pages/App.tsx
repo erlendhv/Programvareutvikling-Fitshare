@@ -214,7 +214,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           />
           {groupsData
             ? groupsData.map((group: any) => (
-                <Group key={group.id} name={group.name} />
+              <Group key={group.id} name={group.name} />
               ))
             : null}
         </div>
@@ -264,7 +264,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           />
           {friendsData
             ? friendsData.map((friend: any) => (
-                <Friend key={friend.id} name={friend.displayName} />
+              <Friend key={friend.id} name={friend.displayName} />
               ))
             : null}
         </div>
@@ -278,6 +278,8 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           }}
           isShowingFriends={isShowingFriendPopUp}
           currentUser={currentUser}
+          friendsData={friendsData}
+          groupsData={groupsData}
         />
       ) : null}
     </div>
