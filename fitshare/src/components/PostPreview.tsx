@@ -1,3 +1,7 @@
+import { useEffect, useState } from "react";
+import firebase from "firebase/compat/app";
+
+
 interface Exercise {
   name: string;
   sets: number;
@@ -8,13 +12,13 @@ interface Exercise {
 interface Workout {
   id: string;
   name: string;
-  exercises: Exercise[];
+  exercises: string[];
 }
 
 interface Program {
   id: string;
   name: string;
-  workouts: Workout[];
+  workouts: string[];
 }
 
 export function PostPreview(props: {
@@ -22,6 +26,29 @@ export function PostPreview(props: {
   name: string;
   program: Program;
 }) {
+
+  const [workouts, setWorkouts] = useState<Workout[]>();
+
+  const [currentProgram, setCurrentProgram] = useState<Program>(props.program);
+
+  useEffect(() => {
+    console.log("useEffect");
+    console.log(currentProgram);
+    const matchingWorkouts: Workout[] = [];
+    currentProgram.workouts.forEach(async (workoutId) => {
+      const workoutCollection = firebase.firestore().collection("workout");
+      const querySnapshot = await workoutCollection
+        .where("id", "==", workoutId)
+        .get();
+      querySnapshot.forEach((doc) => {
+        const workout = doc.data() as Workout;
+        matchingWorkouts.push(workout);
+        // workouts.push(workout);
+      });
+    });
+    setWorkouts(matchingWorkouts);
+  }, [currentProgram]);
+
   return (
     <div className="Post">
       <strong>{props.name}</strong>
@@ -33,16 +60,24 @@ export function PostPreview(props: {
         {props.program.workouts.map((workout, key) => (
           <div className="Workout" key={key}>
             <br></br>
-            <strong>{workout.name}</strong>
+            <strong>{currentProgram.name}</strong>
             <br></br>
-            {workout.exercises.map((exercise, key) => (
+            {workouts ? workouts.map((workout, key) => (
               <div className="Exercise" key={key}>
-                <strong>{exercise.name}</strong>
+                <strong>{workout.name} Wrk</strong>
                 <br></br>
-                {exercise.sets} sets of {exercise.reps} reps
+                {workout.exercises.map((exercise, key) => (
+                  <div className="Exercise" key={key}>
+                    <strong>{exercise}</strong>
+                    <br></br>
+
+                  </div>
+                ))}
                 <br></br>
               </div>
-            ))}
+            )) :
+              <div>No workouts</div>
+            }
           </div>
         ))}
       </div>

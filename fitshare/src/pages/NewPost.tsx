@@ -20,13 +20,13 @@ interface Exercise {
 interface Workout {
   id: string;
   name: string;
-  exercises: Exercise[];
+  exercises: string[];
 }
 
 interface Program {
   id: string;
   name: string;
-  workouts: Workout[];
+  workouts: string[];
 }
 
 export function NewPost(props: { currentUser: firebase.User }) {
