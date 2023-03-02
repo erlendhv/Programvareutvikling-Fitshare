@@ -5,6 +5,7 @@ import { BiArrowBack } from "react-icons/bi";
 import "./../style/NewPost.css";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
+import { v4 as uuidv4 } from 'uuid';
 import "firebase/compat/auth";
 import "firebase/compat/analytics";
 import { useDocumentData } from "react-firebase-hooks/firestore";
@@ -29,8 +30,36 @@ interface Program {
   workouts: string[];
 }
 
+interface Post {
+  owner: string;
+  id: string,
+  description: string
+}
+
 export function NewPost(props: { currentUser: firebase.User }) {
-  const [description, setDescription] = useState<string>("");
+
+  const navigate = useNavigate();
+
+  const publishPost = async () => {
+    const newPost: Post = {
+      owner: props.currentUser.uid,
+      id: uuidv4(),
+      description: description,
+      //name: newPostName,
+      //programs: []
+    };
+
+    const programCollection = firebase.firestore().collection("posts");
+    programCollection.doc(newPost.id).set(newPost);
+    const currentUserRef = firebase.firestore().collection("users").doc(props.currentUser.uid);
+    await currentUserRef.update({
+      programs: firebase.firestore.FieldValue.arrayUnion(newPost.id)
+    });
+
+    navigate('/');
+  };
+
+  const [description, setDescription] = useState<string>("Dette er en description");
 
   const [programs, setPrograms] = useState<Program[]>([
     {
@@ -51,7 +80,6 @@ export function NewPost(props: { currentUser: firebase.User }) {
   ]);
 
   useEffect(() => {
-    console.log("useEffect");
     console.log(currentProgram);
     const matchingWorkouts: Workout[] = [];
     currentProgram.workouts.forEach(async (workoutId) => {
@@ -62,13 +90,12 @@ export function NewPost(props: { currentUser: firebase.User }) {
       querySnapshot.forEach((doc) => {
         const workout = doc.data() as Workout;
         matchingWorkouts.push(workout);
-        // workouts.push(workout);
       });
     });
-    // setWorkouts(workouts);
     setWorkouts(matchingWorkouts);
     console.log(workouts);
   }, [currentProgram]);
+
 
   const currentUserRef = firebase
     .firestore()
@@ -127,11 +154,26 @@ export function NewPost(props: { currentUser: firebase.User }) {
           <PostPreview
             id={currentProgram.id}
             name={currentProgram.name}
-            program={currentProgram}
+            program={[
+              {
+                workoutName: "Leg day",
+                exercises: [
+                  { name: "Bench Press", sets: 3, reps: 10 },
+                  { name: "Squat", sets: 3, reps: 10 },
+                ],
+              },
+              {
+                workoutName: "Workout 2",
+                exercises: [
+                  { name: "Bench Press", sets: 3, reps: 10 },
+                  { name: "Squat", sets: 3, reps: 10 },
+                ],
+              },
+            ]}
           />
         </div>
       </div>
-      <div className="New-post-button">Post</div>
+      <div className="New-post-button" onClick={publishPost}>Post</div>
     </div>
   );
 }

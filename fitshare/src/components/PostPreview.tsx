@@ -24,18 +24,19 @@ interface Program {
 export function PostPreview(props: {
   id: string;
   name: string;
-  program: Program;
+  program: {
+    workoutName: string;
+    exercises: { name: string; sets: number; reps: number }[];
+  }[];
 }) {
 
-  const [workouts, setWorkouts] = useState<Workout[]>();
-
-  const [currentProgram, setCurrentProgram] = useState<Program>(props.program);
+  const [currentProgram, setCurrentProgram] = useState(props.program);
 
   useEffect(() => {
     console.log("useEffect");
     console.log(currentProgram);
     const matchingWorkouts: Workout[] = [];
-    currentProgram.workouts.forEach(async (workoutId) => {
+    currentProgram.forEach(async (workoutId) => {
       const workoutCollection = firebase.firestore().collection("workout");
       const querySnapshot = await workoutCollection
         .where("id", "==", workoutId)
@@ -46,7 +47,6 @@ export function PostPreview(props: {
         // workouts.push(workout);
       });
     });
-    setWorkouts(matchingWorkouts);
   }, [currentProgram]);
 
   return (
@@ -54,33 +54,30 @@ export function PostPreview(props: {
       <strong>{props.name}</strong>
       <br></br>
       <div className="Post-content">
-        <strong>{props.program.workouts.length > 0 ? "Program" : ""}</strong>
+      <input type="text"  id="postDescription" />
+      <br></br>
+        <strong>{props.program.length > 0 ? "Program" : ""}</strong>
         <br></br>
 
-        {props.program.workouts.map((workout, key) => (
+        {props.program.map((workout, key) => (
           <div className="Workout" key={key}>
             <br></br>
-            <strong>{currentProgram.name}</strong>
+            <strong>{workout.workoutName}</strong>
             <br></br>
-            {workouts ? workouts.map((workout, key) => (
+            {workout.exercises.map((exercise, key) => (
               <div className="Exercise" key={key}>
-                <strong>{workout.name} Wrk</strong>
+                <strong>{exercise.name}</strong>
                 <br></br>
-                {workout.exercises.map((exercise, key) => (
-                  <div className="Exercise" key={key}>
-                    <strong>{exercise}</strong>
-                    <br></br>
-
-                  </div>
-                ))}
+                {exercise.sets} sets of {exercise.reps} reps
                 <br></br>
               </div>
-            )) :
-              <div>No workouts</div>
-            }
+            ))}
           </div>
         ))}
       </div>
     </div>
   );
 }
+
+
+//style input og lagre content 
