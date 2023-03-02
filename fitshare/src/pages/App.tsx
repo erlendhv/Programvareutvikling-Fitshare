@@ -1,3 +1,4 @@
+import firebase from "firebase/compat/app";
 import { Post } from '../components/Post';
 import { Group } from '../components/Group';
 import { Friend } from '../components/Friend';
@@ -9,10 +10,10 @@ import FitShareLogo from './../FitShareLogo.png';
 import { useState, useEffect, Key } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { AiOutlineUserAdd } from 'react-icons/ai'
-import { AiOutlineUsergroupAdd } from 'react-icons/ai'
-import firebase from "firebase/compat/app"
+import { AiOutlineUserAdd } from 'react-icons/ai';
+import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 import { useDocumentData, useCollectionData } from "react-firebase-hooks/firestore";
+import Feed from '../components/Feed';
 
 
 interface UserProps {
@@ -328,6 +329,8 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
         </div>
 
         <div className="Group-feed">
+          <Feed currentUser={currentUser}></Feed>
+          {/*
           {posts.map((post) => (
             <Post
               key={post.id}
@@ -342,6 +345,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
               addComment={addComment}
             />
           ))}
+          */}
         </div>
       </div>
 
