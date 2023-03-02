@@ -16,6 +16,9 @@ import { useDocumentData, useCollectionData } from "react-firebase-hooks/firesto
 import Feed from '../components/Feed';
 
 
+
+
+
 interface UserProps {
   currentUser: firebase.User;
 }
@@ -50,15 +53,15 @@ interface Program {
 interface Post {
   id: string;
   name: string;
-  // program: Program;
-  program: {
-    workoutName: string;
-    exercises: {
-      name: string;
-      sets: number;
-      reps: number;
-    }[];
-  }[];
+  program: string;
+  // program: {
+  //   workoutName: string;
+  //   exercises: {
+  //     name: string;
+  //     sets: number;
+  //     reps: number;
+  //   }[];
+  // }[];
   timeStamp: firebase.firestore.Timestamp;
   likes: number;
   likedBy: string[];
@@ -80,12 +83,17 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     navigate("/programs");
   };
 
-  const [inGroupFeed, setInGroupFeed] = useState<boolean>(false);
+  const [inGroupFeed, setInGroupFeed] =
+    useState<boolean>(false);
 
 
   const handleSetCurrentPage = (group: GroupData) => {
-    setInGroupFeed(true);
-    setCurrentPageName(group.name)
+
+  }
+
+  const goToHomePage = () => {
+    setInGroupFeed(false);
+    setCurrentPageName("Homepage")
   }
 
   const [currentPageName, setCurrentPageName] = useState<string>("Homepage");
@@ -189,9 +197,11 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
 
   useEffect(() => {
     let friendsUnsubscribe: firebase.Unsubscribe | undefined;
+    let postsUnsubscribe: firebase.Unsubscribe | undefined;
 
     if (currentUserData) {
       if (currentUserData.friends.length > 0) {
+        // console.log(currentUserData.friends);
         const friendsRef = firebase
           .firestore()
           .collection("users")
@@ -200,24 +210,30 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
             "in",
             currentUserData.friends
           );
-        const friends: any = [];
-        const friendPosts: any = [];
+        // console.log(friendsRef);
 
+        const friendPosts: any = [];
+        const friends: any = [];
         friendsUnsubscribe = friendsRef.onSnapshot((querySnapshot) => {
+          const friendsIterate: any = [];
           querySnapshot.forEach((doc) => {
-            friends.push(doc.data());
+            friendsIterate.push(doc.data());
           });
+          friends.push(...friendsIterate);
 
         });
+        console.log(friends);
 
         friends.forEach((friend: any) => {
+          console.log("HEI");
           const friendPostsRef = firebase
             .firestore()
             .collection("users")
             .doc(friend.id)
             .collection("posts");
+          console.log(friendPostsRef);
 
-          friendPostsRef.onSnapshot((querySnapshot) => {
+          postsUnsubscribe = friendPostsRef.onSnapshot((querySnapshot) => {
             querySnapshot.forEach((doc) => {
               friendPosts.push(doc.data());
             });
@@ -230,9 +246,57 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       }
       return () => {
         if (friendsUnsubscribe) friendsUnsubscribe();
+        if (postsUnsubscribe) postsUnsubscribe();
       };
     }
   }, [currentUserData]);
+
+  // useEffect(() => {
+  //   let friendsUnsubscribe: firebase.Unsubscribe | undefined;
+
+  //   if (currentUserData) {
+  //     if (currentUserData.friends.length > 0) {
+  //       const friendsRef = firebase.firestore().collection("users").where(
+  //         firebase.firestore.FieldPath.documentId(),
+  //         "in",
+  //         currentUserData.friends
+  //       );
+
+  //       const friendPosts: any[] = [];
+  //       const friends: any[] = [];
+  //       let numFriendsFetched = 0;
+
+  //       friendsUnsubscribe = friendsRef.onSnapshot((querySnapshot) => {
+  //         const friendsIterate: any[] = [];
+  //         querySnapshot.forEach((doc) => {
+  //           friendsIterate.push(doc.data());
+  //         });
+  //         friends.push(...friendsIterate);
+  //         console.log(friends);
+
+  //         friendsIterate.forEach((friend: any) => {
+  //           const friendPostsRef = firebase.firestore().collection("users").doc(friend.id).collection("posts");
+
+  //           friendsUnsubscribe = friendPostsRef.onSnapshot((querySnapshot) => {
+  //             querySnapshot.forEach((doc) => {
+  //               friendPosts.push(doc.data());
+  //             });
+
+  //             // Check if we have fetched all the posts for all the friends
+  //             numFriendsFetched++;
+  //             if (numFriendsFetched === friends.length) {
+  //               console.log(friendPosts);
+  //               // You can now set the `friendPosts` state here
+  //             }
+  //           });
+  //         });
+  //       });
+  //     }
+  //     return () => {
+  //       if (friendsUnsubscribe) friendsUnsubscribe();
+  //     };
+  //   }
+  // }, [currentUserData]);
 
 
   const [friendsData, setFriendsData] = useState<any>(null);
@@ -300,6 +364,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           className="FitSharelogo"
           src={FitShareLogo}
           alt="FitShareLogo"
+          onClick={goToHomePage}
         ></img>
         <div className="Groups">
           <strong>Groups</strong>
@@ -383,6 +448,20 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           groupsData={groupsData}
         />
       ) : null}
+
+      <div>
+        {inGroupFeed ? (
+          // Code to execute if `inGroupFeed` is true
+          <>
+            handleSetCurrentPage()
+          </>
+        ) : (
+          // Code to execute if `inGroupFeed` is false
+          <>
+
+          </>
+        )}
+      </div>
     </div>
   );
 };
