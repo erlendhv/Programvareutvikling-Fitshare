@@ -52,7 +52,7 @@ export function PostPreview(props: {
           props.setDescription(e.target.value)
         }} />
         <br></br>
-        <strong>{props.program && props.program.workouts.length > 0 ? "Program" : ""}</strong>
+        <strong>{props.program && props.program.workouts.length > 0 ? props.program.name : ""}</strong>
         <br></br>
 
         {props.program && props.program.workouts.map((workout, key) => (

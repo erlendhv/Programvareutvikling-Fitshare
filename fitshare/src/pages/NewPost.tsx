@@ -221,7 +221,7 @@ export function NewPost(props: { currentUser: firebase.User }) {
         <div className="Overview">
           <PostPreview
             id={currentProgram.id}
-            name={currentProgram.name}
+            name={props.currentUser.displayName!}
             program={programViews.find((programView) => programView.id === currentProgram.id)!}
             setDescription={setDescription}
           />
