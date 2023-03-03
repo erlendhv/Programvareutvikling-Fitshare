@@ -146,6 +146,8 @@ export function NewPost(props: { currentUser: firebase.User }) {
 
           querySnapshot.forEach((doc) => {
             const program = doc.data();
+            // Add program to programs list on the left
+            newPrograms.push(program);
 
             const programView: ProgramView = {
               id: program.id,
@@ -160,30 +162,30 @@ export function NewPost(props: { currentUser: firebase.User }) {
               }]
             };
 
-            // Add program to programs list on the left
-            newPrograms.push(program);
+            if (program.workouts.length !== 0) {
 
-            const workoutsRef = firebase.firestore().collection("workout").where(firebase.firestore.FieldPath.documentId(), "in", program.workouts);
-            workoutsRef.onSnapshot((querySnapshot) => {
-              const newWorkouts: any = [];
-              querySnapshot.forEach((doc) => {
-                const workout = doc.data();
-                newWorkouts.push(workout);
+              const workoutsRef = firebase.firestore().collection("workout").where(firebase.firestore.FieldPath.documentId(), "in", program.workouts);
+              workoutsRef.onSnapshot((querySnapshot) => {
+                const newWorkouts: any = [];
+                querySnapshot.forEach((doc) => {
+                  const workout = doc.data();
+                  newWorkouts.push(workout);
 
-                const exercisesRef = firebase.firestore().collection("exercise").where(firebase.firestore.FieldPath.documentId(), "in", workout.exercises);
-                exercisesRef.onSnapshot((querySnapshot) => {
-                  const exercises: any = [];
-                  querySnapshot.forEach((doc) => {
-                    const exercise = doc.data();
-                    exercises.push(exercise);
-                  });
-                  programView.workouts.push({
-                    workoutName: workout.name,
-                    exercises: exercises
+                  const exercisesRef = firebase.firestore().collection("exercise").where(firebase.firestore.FieldPath.documentId(), "in", workout.exercises);
+                  exercisesRef.onSnapshot((querySnapshot) => {
+                    const exercises: any = [];
+                    querySnapshot.forEach((doc) => {
+                      const exercise = doc.data();
+                      exercises.push(exercise);
+                    });
+                    programView.workouts.push({
+                      workoutName: workout.name,
+                      exercises: exercises
+                    });
                   });
                 });
               });
-            });
+            }
             // Remove first empty workout
             programView.workouts.shift();
             setProgramViews(programViews => [...programViews, programView]);
