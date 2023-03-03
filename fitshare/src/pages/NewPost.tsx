@@ -30,10 +30,27 @@ interface Program {
   workouts: string[];
 }
 
+interface ProgramView {
+  id: string;
+  name: string;
+  workouts: [{
+    workoutName: string;
+    exercises: [{
+      name: string;
+      sets: number;
+      reps: number;
+    }]
+  }]
+}
+
 interface Post {
   owner: string;
   id: string,
   description: string
+  comments: [];
+  likedBy: [];
+  likes: number;
+  program: string;
 }
 
 export function NewPost(props: { currentUser: firebase.User }) {
@@ -45,15 +62,17 @@ export function NewPost(props: { currentUser: firebase.User }) {
       owner: props.currentUser.uid,
       id: uuidv4(),
       description: description,
-      //name: newPostName,
-      //programs: []
+      comments: [],
+      likedBy: [],
+      likes: 0,
+      program: currentProgram.id
     };
 
     const programCollection = firebase.firestore().collection("posts");
     programCollection.doc(newPost.id).set(newPost);
     const currentUserRef = firebase.firestore().collection("users").doc(props.currentUser.uid);
     await currentUserRef.update({
-      programs: firebase.firestore.FieldValue.arrayUnion(newPost.id)
+      posts: firebase.firestore.FieldValue.arrayUnion(newPost.id)
     });
 
     navigate('/');
@@ -71,31 +90,20 @@ export function NewPost(props: { currentUser: firebase.User }) {
 
   const [currentProgram, setCurrentProgram] = useState<Program>(programs[0]);
 
-  const [workouts, setWorkouts] = useState<Workout[]>([
+  const [programViews, setProgramViews] = useState<ProgramView[]>([
     {
       id: "0",
-      name: "Your workouts",
-      exercises: [],
-    },
+      name: "Your programs",
+      workouts: [{
+        workoutName: "Your workouts",
+        exercises: [{
+          name: "Your exercises",
+          sets: 0,
+          reps: 0
+        }]
+      }]
+    }
   ]);
-
-  useEffect(() => {
-    console.log(currentProgram);
-    const matchingWorkouts: Workout[] = [];
-    currentProgram.workouts.forEach(async (workoutId) => {
-      const workoutCollection = firebase.firestore().collection("workout");
-      const querySnapshot = await workoutCollection
-        .where("id", "==", workoutId)
-        .get();
-      querySnapshot.forEach((doc) => {
-        const workout = doc.data() as Workout;
-        matchingWorkouts.push(workout);
-      });
-    });
-    setWorkouts(matchingWorkouts);
-    console.log(workouts);
-  }, [currentProgram]);
-
 
   const currentUserRef = firebase
     .firestore()
@@ -103,33 +111,101 @@ export function NewPost(props: { currentUser: firebase.User }) {
     .doc(props.currentUser.uid);
   const [currentUserData] = useDocumentData(currentUserRef as any);
 
+
   useEffect(() => {
-    let unsubscribe: firebase.Unsubscribe | undefined;
     if (currentUserData) {
       if (currentUserData.programs.length > 0) {
-        const programsRef = firebase
-          .firestore()
-          .collection("programs")
-          .where(
-            firebase.firestore.FieldPath.documentId(),
-            "in",
-            currentUserData.programs
-          );
-        unsubscribe = programsRef.onSnapshot((querySnapshot) => {
-          const programs: any = [];
+        const programsRef = firebase.firestore().collection("programs").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.programs);
+        programsRef.onSnapshot((querySnapshot) => {
+          const newPrograms: any = [];
           querySnapshot.forEach((doc) => {
-            programs.push(doc.data());
+            const program = doc.data();
+            console.log(program.name);
+
+            const programView: ProgramView = {
+              id: program.id,
+              name: program.name,
+              workouts: [{
+                workoutName: "",
+                exercises: [{
+                  name: "",
+                  sets: 0,
+                  reps: 0
+                }]
+              }]
+            };
+
+            newPrograms.push(program);
+
+            const workoutsRef = firebase.firestore().collection("workout").where(firebase.firestore.FieldPath.documentId(), "in", program.workouts);
+            workoutsRef.onSnapshot((querySnapshot) => {
+              const newWorkouts: any = [];
+              querySnapshot.forEach((doc) => {
+                const workout = doc.data();
+                console.log(workout.name);
+                newWorkouts.push(workout);
+
+                var exercises: any = [];
+
+                const exercisesRef = firebase.firestore().collection("exercise").where(firebase.firestore.FieldPath.documentId(), "in", workout.exercises);
+                exercises = [];
+                exercisesRef.onSnapshot((querySnapshot) => {
+                  querySnapshot.forEach((doc) => {
+                    const exercise = doc.data();
+                    console.log(exercise.name);
+                    exercises.push(exercise);
+                  });
+                });
+                programView.workouts.push({
+                  workoutName: workout.name,
+                  exercises: exercises
+                });
+              });
+            });
+            // remove first empty workout
+            programView.workouts.shift();
+            setProgramViews(programViews => [...programViews, programView]);
           });
-          setPrograms(programs);
+          setPrograms(newPrograms);
         });
+
+        programs.forEach((program) => {
+
+        });
+
       } else {
         setPrograms([]);
       }
-      return () => {
-        if (unsubscribe) unsubscribe();
-      };
     }
   }, [currentUserData]);
+
+  // useEffect(() => {
+  //   let unsubscribe: firebase.Unsubscribe | undefined;
+  //   if (currentUserData) {
+  //     if (currentUserData.programs.length > 0) {
+  //       const programsRef = firebase
+  //         .firestore()
+  //         .collection("programs")
+  //         .where(
+  //           firebase.firestore.FieldPath.documentId(),
+  //           "in",
+  //           currentUserData.programs
+  //         );
+  //       unsubscribe = programsRef.onSnapshot((querySnapshot) => {
+  //         const programs: any = [];
+  //         querySnapshot.forEach((doc) => {
+  //           programs.push(doc.data());
+  //         });
+  //         setPrograms(programs);
+  //       });
+  //     } else {
+  //       setPrograms([]);
+  //     }
+  //     return () => {
+  //       if (unsubscribe) unsubscribe();
+  //     };
+  //   }
+  // }, [currentUserData]);
 
   return (
     <div className="New-Post">
@@ -154,22 +230,23 @@ export function NewPost(props: { currentUser: firebase.User }) {
           <PostPreview
             id={currentProgram.id}
             name={currentProgram.name}
-            program={[
-              {
-                workoutName: "Leg day",
-                exercises: [
-                  { name: "Bench Press", sets: 3, reps: 10 },
-                  { name: "Squat", sets: 3, reps: 10 },
-                ],
-              },
-              {
-                workoutName: "Workout 2",
-                exercises: [
-                  { name: "Bench Press", sets: 3, reps: 10 },
-                  { name: "Squat", sets: 3, reps: 10 },
-                ],
-              },
-            ]}
+            program={
+              programViews.length > 0 ? programViews.find((programView) => programView.id === currentProgram.id)!
+                :
+                {
+                  id: "0",
+                  name: "Your programs",
+                  workouts: [{
+                    workoutName: "Your workouts",
+                    exercises: [{
+                      name: "Your exercises",
+                      sets: 0,
+                      reps: 0
+                    }]
+                  }]
+                }
+            }
+            setDescription={setDescription}
           />
         </div>
       </div>

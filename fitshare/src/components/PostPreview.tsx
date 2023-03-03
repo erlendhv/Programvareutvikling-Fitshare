@@ -20,47 +20,42 @@ interface Program {
   workouts: string[];
 }
 
+interface ProgramView {
+  id: string;
+  name: string;
+  workouts: [{
+    workoutName: string;
+    exercises: [{
+      name: string;
+      sets: number;
+      reps: number;
+    }]
+  }]
+}
+
 export function PostPreview(props: {
   id: string;
   name: string;
-  program: {
-    workoutName: string;
-    exercises: { name: string; sets: number; reps: number }[];
-  }[];
+  program: ProgramView;
+  setDescription: (description: string) => void;
 }) {
-  const [currentProgram, setCurrentProgram] = useState(props.program);
 
-  useEffect(() => {
-    console.log("useEffect");
-    console.log(currentProgram);
-    const matchingWorkouts: Workout[] = [];
-    currentProgram.forEach(async (workoutId) => {
-      const workoutCollection = firebase.firestore().collection("workout");
-      const querySnapshot = await workoutCollection
-        .where("id", "==", workoutId)
-        .get();
-      querySnapshot.forEach((doc) => {
-        const workout = doc.data() as Workout;
-        matchingWorkouts.push(workout);
-        // workouts.push(workout);
-      });
-    });
-  }, [currentProgram]);
+  const [newPostDescription, setNewPostDescription] = useState<string>("");
 
   return (
     <div className="Post">
       <strong>{props.name}</strong>
       <br></br>
       <div className="Post-content">
-        <textarea
-          id="poswtDescription"
-          placeholder="Write something.."
-        ></textarea>
+        <input className="Input-field" type="text" placeholder="Description" value={newPostDescription} onChange={(e) => {
+          setNewPostDescription(e.target.value);
+          props.setDescription(e.target.value)
+        }} />
         <br></br>
-        <strong>{props.program.length > 0 ? "Program" : ""}</strong>
+        <strong>{props.program.workouts.length > 0 ? "Program" : ""}</strong>
         <br></br>
 
-        {props.program.map((workout, key) => (
+        {props.program.workouts.map((workout, key) => (
           <div className="Workout" key={key}>
             <br></br>
             <strong>{workout.workoutName}</strong>
