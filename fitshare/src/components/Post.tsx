@@ -5,7 +5,7 @@ import { AiOutlineComment } from "react-icons/ai";
 export function Post(props: {
   id: string, name: string,
   program: { workoutName: string; exercises: { name: string; sets: number; reps: number; }[]; }[],
-  image: string,
+  image?: string,
   likes: number,
   liked: boolean,
   comments: { person: string; content: string; }[],

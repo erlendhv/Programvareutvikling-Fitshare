@@ -15,7 +15,8 @@ interface Exercise {
 interface Workout {
   id: string;
   name: string;
-  exercises: string[];
+  exercises: Exercise[];
+
 }
 
 interface Program {
@@ -210,36 +211,90 @@ useEffect(() => {
   console.log("exercisesData", exercisesData);
   console.log("workoutsData", workoutsData);
 
-  
   return (
+    <div className="Feed">
+      {postsData.map((post: Post) => {
+        const friend = friendsData.find((friend) => friend.id === post.owner);
+        const name = friend?.displayName ?? "";
+  
+        const program = post.program.workouts.map((workout) => {
+          const exercises = workout.exercises.map((exerciseId) => {
+            const exercise = exercisesData[exerciseId];
+            return {
+              id: exerciseId,
+              name: exercise?.name ?? "",
+              sets: exercise?.sets ?? 0,
+              reps: exercise?.reps ?? 0,
+            };
+          });
+  
+          return {
+            workoutName: workout.name,
+            exercises: exercises,
+          };
+        });
+  
+        return (
+          <Post
+            key={post.id}
+            id={post.id}
+            name={name}
+            program={program}
+            likes={post.likes}
+            liked={true}
+            comments={[
+              { person: "Roger", content: "Thats crazy!" },
+              { person: "Roger", content: "No way!" },
+              {
+                person: "Kenneth",
+                content:
+                  "That is the most crazy thing I have ever seen in my entire life! I really hope I can look just like you in the future! You are the person I dream of being in my sleep!",
+              },
+              { person: "Sen", content: "I want you!" },
+            ]}
+            toggleLiked={() => {}}
+            addComment={() => {}}
+          />
+        );
+      })}
+    </div>
+  );
+  
+  /*return (
     <div className="Feed">
       {postsData.map((post: Post) => (
         <Post
           key={post.id}
           id={post.id}
-          name={post.name}
-          program={{
-            id: post.program.id,
-            owner: post.program.owner,
-            name: post.program.name,
-            workouts: post.program.workouts.map((workout) => ({
-              id: workout.id,
-              name: workout.name,
-              exercises: workout.exercises.map((exerciseId) => ({
-                ...exercisesData[exerciseId],
-                id: exerciseId,
-              })),
+          name={friendsData.find((friend) => friend.id === post.owner)?.displayName ?? ""}
+          program={post.program.workouts.map((workout) => ({
+            workoutName: workout.name,
+            id: workout.id,
+            exercises: Object.keys(workout.exercises).map((exerciseId) => ({
+              id: exerciseId,
+              name: workout.exercises[exerciseId]?.name ?? "",
+              sets: workout.exercises[exerciseId]?.sets ?? 0,
+              reps: workout.exercises[exerciseId]?.reps ?? 0,
             })),
-          }}
+          }))}
           likes={post.likes}
-          liked={post.liked}
-          comments={post.comments}
-          toggleLiked={togglePostLiked}
-          addComment={addPostComment}
+          liked={true}
+          comments={[
+            { person: "Roger", content: "Thats crazy!" },
+            { person: "Roger", content: "No way!" },
+            {
+              person: "Kenneth",
+              content:
+                "That is the most crazy thing I have ever seen in my entire life! I really hope I can look just like you in the future! You are the person I dream of being in my sleep!",
+            },
+            { person: "Sen", content: "I want you!" },
+          ]}
+          toggleLiked={() => {}}
+          addComment={() => {}}
         />
       ))}
     </div>
-  );
+  );*/
 };
 
 export default Feed;
