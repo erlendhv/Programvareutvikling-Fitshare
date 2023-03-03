@@ -58,6 +58,28 @@ export function NewPost(props: { currentUser: firebase.User }) {
   const navigate = useNavigate();
 
   const publishPost = async () => {
+
+    var programString = "";
+
+    // Remove the first dummy program
+    programViews.shift();
+
+    // Add correct program with workouts and exercises to string
+    programViews.forEach((programView) => {
+      if (programView.id === currentProgram.id) {
+        programString = "";
+        programString += programView.name;
+        programView.workouts.forEach((workout) => {
+          programString += "*Workout*"
+          programString += workout.workoutName;
+          workout.exercises.forEach((exercise) => {
+            programString += "*Exercise*"
+            programString += exercise.name;
+          });
+        });
+      }
+    });
+
     const newPost: Post = {
       owner: props.currentUser.uid,
       id: uuidv4(),
@@ -65,7 +87,7 @@ export function NewPost(props: { currentUser: firebase.User }) {
       comments: [],
       likedBy: [],
       likes: 0,
-      program: currentProgram.id
+      program: programString
     };
 
     const programCollection = firebase.firestore().collection("posts");
@@ -111,16 +133,15 @@ export function NewPost(props: { currentUser: firebase.User }) {
     .doc(props.currentUser.uid);
   const [currentUserData] = useDocumentData(currentUserRef as any);
 
-
   useEffect(() => {
     if (currentUserData) {
       if (currentUserData.programs.length > 0) {
         const programsRef = firebase.firestore().collection("programs").where(firebase.firestore.FieldPath.documentId(), "in", currentUserData.programs);
         programsRef.onSnapshot((querySnapshot) => {
           const newPrograms: any = [];
+
           querySnapshot.forEach((doc) => {
             const program = doc.data();
-            console.log(program.name);
 
             const programView: ProgramView = {
               id: program.id,
@@ -135,6 +156,7 @@ export function NewPost(props: { currentUser: firebase.User }) {
               }]
             };
 
+            // Add program to programs list on the left
             newPrograms.push(program);
 
             const workoutsRef = firebase.firestore().collection("workout").where(firebase.firestore.FieldPath.documentId(), "in", program.workouts);
@@ -142,35 +164,27 @@ export function NewPost(props: { currentUser: firebase.User }) {
               const newWorkouts: any = [];
               querySnapshot.forEach((doc) => {
                 const workout = doc.data();
-                console.log(workout.name);
                 newWorkouts.push(workout);
 
-                var exercises: any = [];
-
                 const exercisesRef = firebase.firestore().collection("exercise").where(firebase.firestore.FieldPath.documentId(), "in", workout.exercises);
-                exercises = [];
                 exercisesRef.onSnapshot((querySnapshot) => {
+                  const exercises: any = [];
                   querySnapshot.forEach((doc) => {
                     const exercise = doc.data();
-                    console.log(exercise.name);
                     exercises.push(exercise);
                   });
-                });
-                programView.workouts.push({
-                  workoutName: workout.name,
-                  exercises: exercises
+                  programView.workouts.push({
+                    workoutName: workout.name,
+                    exercises: exercises
+                  });
                 });
               });
             });
-            // remove first empty workout
+            // Remove first empty workout
             programView.workouts.shift();
             setProgramViews(programViews => [...programViews, programView]);
           });
           setPrograms(newPrograms);
-        });
-
-        programs.forEach((program) => {
-
         });
 
       } else {
@@ -179,40 +193,12 @@ export function NewPost(props: { currentUser: firebase.User }) {
     }
   }, [currentUserData]);
 
-  // useEffect(() => {
-  //   let unsubscribe: firebase.Unsubscribe | undefined;
-  //   if (currentUserData) {
-  //     if (currentUserData.programs.length > 0) {
-  //       const programsRef = firebase
-  //         .firestore()
-  //         .collection("programs")
-  //         .where(
-  //           firebase.firestore.FieldPath.documentId(),
-  //           "in",
-  //           currentUserData.programs
-  //         );
-  //       unsubscribe = programsRef.onSnapshot((querySnapshot) => {
-  //         const programs: any = [];
-  //         querySnapshot.forEach((doc) => {
-  //           programs.push(doc.data());
-  //         });
-  //         setPrograms(programs);
-  //       });
-  //     } else {
-  //       setPrograms([]);
-  //     }
-  //     return () => {
-  //       if (unsubscribe) unsubscribe();
-  //     };
-  //   }
-  // }, [currentUserData]);
-
   return (
     <div className="New-Post">
       <h1>Select program to post</h1>
       <div className="Overviews">
         <div className="Overview">
-          {programs.map((program, key) => (
+          {programs.length > 0 && programs.map((program, key) => (
             <div
               key={key}
               className={
@@ -230,22 +216,7 @@ export function NewPost(props: { currentUser: firebase.User }) {
           <PostPreview
             id={currentProgram.id}
             name={currentProgram.name}
-            program={
-              programViews.length > 0 ? programViews.find((programView) => programView.id === currentProgram.id)!
-                :
-                {
-                  id: "0",
-                  name: "Your programs",
-                  workouts: [{
-                    workoutName: "Your workouts",
-                    exercises: [{
-                      name: "Your exercises",
-                      sets: 0,
-                      reps: 0
-                    }]
-                  }]
-                }
-            }
+            program={programViews.find((programView) => programView.id === currentProgram.id)!}
             setDescription={setDescription}
           />
         </div>

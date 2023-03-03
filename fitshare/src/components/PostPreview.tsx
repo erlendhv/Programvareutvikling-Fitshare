@@ -36,7 +36,7 @@ interface ProgramView {
 export function PostPreview(props: {
   id: string;
   name: string;
-  program: ProgramView;
+  program?: ProgramView;
   setDescription: (description: string) => void;
 }) {
 
@@ -52,10 +52,10 @@ export function PostPreview(props: {
           props.setDescription(e.target.value)
         }} />
         <br></br>
-        <strong>{props.program.workouts.length > 0 ? "Program" : ""}</strong>
+        <strong>{props.program && props.program.workouts.length > 0 ? "Program" : ""}</strong>
         <br></br>
 
-        {props.program.workouts.map((workout, key) => (
+        {props.program && props.program.workouts.map((workout, key) => (
           <div className="Workout" key={key}>
             <br></br>
             <strong>{workout.workoutName}</strong>
