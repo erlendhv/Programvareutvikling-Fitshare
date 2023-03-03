@@ -154,3 +154,10 @@
 .New-post-button:active {
   background: #008000;
 }
+textarea {
+  width: 400px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}

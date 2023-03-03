@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 
-
 interface Exercise {
   name: string;
   sets: number;
@@ -29,7 +28,6 @@ export function PostPreview(props: {
     exercises: { name: string; sets: number; reps: number }[];
   }[];
 }) {
-
   const [currentProgram, setCurrentProgram] = useState(props.program);
 
   useEffect(() => {
@@ -54,8 +52,11 @@ export function PostPreview(props: {
       <strong>{props.name}</strong>
       <br></br>
       <div className="Post-content">
-      <input type="text"  id="postDescription" />
-      <br></br>
+        <textarea
+          id="poswtDescription"
+          placeholder="Write something.."
+        ></textarea>
+        <br></br>
         <strong>{props.program.length > 0 ? "Program" : ""}</strong>
         <br></br>
 
@@ -79,5 +80,4 @@ export function PostPreview(props: {
   );
 }
 
-
-//style input og lagre content 
+//style input og lagre content
