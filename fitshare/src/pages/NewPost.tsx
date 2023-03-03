@@ -75,6 +75,10 @@ export function NewPost(props: { currentUser: firebase.User }) {
           workout.exercises.forEach((exercise) => {
             programString += "*Exercise*"
             programString += exercise.name;
+            programString += "*Sets*"
+            programString += exercise.sets;
+            programString += "*Reps*"
+            programString += exercise.reps;
           });
         });
       }
