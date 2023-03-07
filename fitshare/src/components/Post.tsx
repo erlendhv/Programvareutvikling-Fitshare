@@ -42,10 +42,8 @@ export function Post(props: {
     <strong>{props.name}</strong>
     <br></br>
     <div className="Post-content">
-      <strong>{props.program.workouts.length > 0 ? "Program" : ""}</strong>
-      <br></br>
-      <p>{props.description}</p>
-      <br></br>
+      <strong>{props.program.workouts.length > 0 ? "Program" : null}</strong>
+      <p className="Post-description">{props.description}</p>
 
       {props.program.workouts.map((workout, key) => (
         <div className="Workout" key={key}>
@@ -63,9 +61,9 @@ export function Post(props: {
         </div>
       ))}
 
-      {props.image ? <><br></br> <img src={props.image} className="Post-image" alt="Exercise" /></> : ""}
+      {props.image ? <><br></br> <img src={props.image} className="Post-image" alt="Exercise" /></> : null}
 
-      {props.comments.length > 0 ? <><br></br><strong>Comments</strong></> : ""}
+      {props.comments.length > 0 ? <><strong>Comments</strong></> : null}
 
       <input className="Comment-input" placeholder="Write a comment!" value={userComment} onChange={(e) => setUserComment(e.target.value)} />
 
