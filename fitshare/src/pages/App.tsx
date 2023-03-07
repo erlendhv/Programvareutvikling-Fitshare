@@ -13,10 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 import { useDocumentData, useCollectionData } from "react-firebase-hooks/firestore";
-import Feed from '../components/Feed';
-
-
-
+import { Feed } from "../components/Feed";
 
 
 interface UserProps {
@@ -30,44 +27,12 @@ interface GroupData {
   admin: string;
 }
 
-interface Exercise {
-  name: string;
-  sets: number;
-  reps: number;
+interface Friend {
   id: string;
-}
-
-interface Workout {
-  id: string;
-  name: string;
-  exercises: Exercise[];
-}
-
-interface Program {
-  owner: string;
-  id: string;
-  name: string;
-  workouts: String[];
-}
-
-interface Post {
-  id: string;
-  name: string;
-  program: string;
-  // program: {
-  //   workoutName: string;
-  //   exercises: {
-  //     name: string;
-  //     sets: number;
-  //     reps: number;
-  //   }[];
-  // }[];
-  timeStamp: firebase.firestore.Timestamp;
-  likes: number;
-  likedBy: string[];
-  owner: string;
-  caption?: string;
-  image?: string;
+  displayName: string;
+  programs: any[]; // You can replace "any" with the type definition for your program data
+  groups: any[]; // You can replace "any" with the type definition for your group data
+  posts: any[]; // You can replace "any" with the type definition for your post data
 }
 
 const App: React.FC<UserProps> = ({ currentUser }) => {
@@ -98,95 +63,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
 
   const [currentPageName, setCurrentPageName] = useState<string>("Homepage");
 
-  const [posts, setPosts] = useState([
-    {
-      id: uuidv4(),
-      name: "Gunnhild Pedersen",
-      program: [
-        {
-          workoutName: "Leg day",
-          exercises: [
-            { name: "Bench Press", sets: 3, reps: 10 },
-            { name: "Squat", sets: 3, reps: 10 },
-          ],
-        },
-        {
-          workoutName: "Workout 2",
-          exercises: [
-            { name: "Bench Press", sets: 3, reps: 10 },
-            { name: "Squat", sets: 3, reps: 10 },
-          ],
-        },
-      ],
-      image: ExercisePhoto,
-      likes: 0,
-      liked: false,
-      comments: [
-        { person: "Roger", content: "Thats crazy!" },
-        { person: "Roger", content: "No way!" },
-        {
-          person: "Kenneth",
-          content:
-            "That is the most crazy thing I have ever seen in my entire life! I really hope I can look just like you in the future! You are the person I dream of being in my sleep!",
-        },
-        { person: "Sen", content: "I want you!" },
-      ],
-    },
-    {
-      id: uuidv4(),
-      name: "Gunnhild Pedersen",
-      program: [
-        {
-          workoutName: "Pull",
-          exercises: [
-            { name: "Bench Press", sets: 3, reps: 10 },
-            { name: "Squat", sets: 3, reps: 10 },
-          ],
-        },
-        {
-          workoutName: "Workout 2",
-          exercises: [
-            { name: "Bench Press", sets: 3, reps: 10 },
-            { name: "Squat", sets: 3, reps: 10 },
-          ],
-        },
-      ],
-      image: "",
-      likes: 499,
-      liked: true,
-      comments: [],
-    },
-  ]);
 
-  function toggleLiked(id: string) {
-    const newPosts = [...posts];
-    const post = newPosts.find((post) => post.id === id);
-
-    if (post != null) {
-      post.liked = !post.liked;
-      if (post.liked) {
-        post.likes += 1;
-      } else {
-        post.likes -= 1;
-      }
-    }
-    setPosts(newPosts);
-  }
-
-  function addComment(id: string, comment: string) {
-    const newPosts = [...posts];
-
-    const post = newPosts.find((post) => post.id === id);
-
-    if (post && comment !== "") {
-      post.comments.push({
-        person: currentUser.displayName!,
-        content: comment,
-      });
-    }
-
-    setPosts(newPosts);
-  }
   // This is to get data about currentuser's friends
   // ref to current user in users collection firebase
   const currentUserRef = firebase
@@ -194,110 +71,6 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     .collection("users")
     .doc(currentUser.uid);
   const [currentUserData] = useDocumentData(currentUserRef as any);
-
-  useEffect(() => {
-    let friendsUnsubscribe: firebase.Unsubscribe | undefined;
-    let postsUnsubscribe: firebase.Unsubscribe | undefined;
-
-    if (currentUserData) {
-      if (currentUserData.friends.length > 0) {
-        // console.log(currentUserData.friends);
-        const friendsRef = firebase
-          .firestore()
-          .collection("users")
-          .where(
-            firebase.firestore.FieldPath.documentId(),
-            "in",
-            currentUserData.friends
-          );
-        // console.log(friendsRef);
-
-        const friendPosts: any = [];
-        const friends: any = [];
-        friendsUnsubscribe = friendsRef.onSnapshot((querySnapshot) => {
-          const friendsIterate: any = [];
-          querySnapshot.forEach((doc) => {
-            friendsIterate.push(doc.data());
-          });
-          friends.push(...friendsIterate);
-
-        });
-        console.log(friends);
-
-        friends.forEach((friend: any) => {
-          console.log("HEI");
-          const friendPostsRef = firebase
-            .firestore()
-            .collection("users")
-            .doc(friend.id)
-            .collection("posts");
-          console.log(friendPostsRef);
-
-          postsUnsubscribe = friendPostsRef.onSnapshot((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              friendPosts.push(doc.data());
-            });
-          });
-        });
-        console.log(friendPosts);
-        // setPosts([...posts, friendPosts]);
-      } else {
-        // setPosts([...posts]);
-      }
-      return () => {
-        if (friendsUnsubscribe) friendsUnsubscribe();
-        if (postsUnsubscribe) postsUnsubscribe();
-      };
-    }
-  }, [currentUserData]);
-
-  // useEffect(() => {
-  //   let friendsUnsubscribe: firebase.Unsubscribe | undefined;
-
-  //   if (currentUserData) {
-  //     if (currentUserData.friends.length > 0) {
-  //       const friendsRef = firebase.firestore().collection("users").where(
-  //         firebase.firestore.FieldPath.documentId(),
-  //         "in",
-  //         currentUserData.friends
-  //       );
-
-  //       const friendPosts: any[] = [];
-  //       const friends: any[] = [];
-  //       let numFriendsFetched = 0;
-
-  //       friendsUnsubscribe = friendsRef.onSnapshot((querySnapshot) => {
-  //         const friendsIterate: any[] = [];
-  //         querySnapshot.forEach((doc) => {
-  //           friendsIterate.push(doc.data());
-  //         });
-  //         friends.push(...friendsIterate);
-  //         console.log(friends);
-
-  //         friendsIterate.forEach((friend: any) => {
-  //           const friendPostsRef = firebase.firestore().collection("users").doc(friend.id).collection("posts");
-
-  //           friendsUnsubscribe = friendPostsRef.onSnapshot((querySnapshot) => {
-  //             querySnapshot.forEach((doc) => {
-  //               friendPosts.push(doc.data());
-  //             });
-
-  //             // Check if we have fetched all the posts for all the friends
-  //             numFriendsFetched++;
-  //             if (numFriendsFetched === friends.length) {
-  //               console.log(friendPosts);
-  //               // You can now set the `friendPosts` state here
-  //             }
-  //           });
-  //         });
-  //       });
-  //     }
-  //     return () => {
-  //       if (friendsUnsubscribe) friendsUnsubscribe();
-  //     };
-  //   }
-  // }, [currentUserData]);
-
 
   const [friendsData, setFriendsData] = useState<any>(null);
   const [groupsData, setGroupsData] = useState<any>(null);
@@ -393,25 +166,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           <div className="Post-button">Post Image</div>
         </div>
 
-        <div className="Group-feed">
-          <Feed currentUser={currentUser}></Feed>
-          {/*
-          {posts.map((post) => (
-            <Post
-              key={post.id}
-              id={post.id}
-              name={post.name}
-              program={post.program}
-              image={post.image}
-              likes={post.likes}
-              liked={post.liked}
-              comments={post.comments}
-              toggleLiked={toggleLiked}
-              addComment={addComment}
-            />
-          ))}
-          */}
-        </div>
+        <Feed currentUser={currentUser} />
       </div>
 
       {/* RIGHT SIDE */}
