@@ -202,9 +202,9 @@ export function Feed(props: UserProps) {
 
 
     return <div className="Group-feed">
-        {posts.map((post) => (
+        {posts.map((post, key) => (
             <Post
-                key={post.id}
+                key={key} // TODO: Change to post.id (error occurs when post.id is used)
                 id={post.id}
                 name={post.name}
                 description={post.description}
