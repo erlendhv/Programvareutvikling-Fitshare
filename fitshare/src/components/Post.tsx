@@ -2,9 +2,28 @@ import { useState } from "react";
 import { FiThumbsUp } from "react-icons/fi";
 import { AiOutlineComment } from "react-icons/ai";
 
+interface ExerciseView {
+  name?: string;
+  sets?: number;
+  reps?: number;
+}
+
+interface WorkoutView {
+  name?: string;
+  exercises: ExerciseView[];
+
+}
+
+interface ProgramView {
+  name: string;
+  workouts: WorkoutView[];
+}
+
 export function Post(props: {
-  id: string, name: string,
-  program: { workoutName: string; exercises: { name: string; sets: number; reps: number; }[]; }[],
+  id: string,
+  name: string,
+  description: string,
+  program: ProgramView,
   image?: string,
   likes: number,
   liked: boolean,
@@ -23,13 +42,15 @@ export function Post(props: {
     <strong>{props.name}</strong>
     <br></br>
     <div className="Post-content">
-      <strong>{props.program.length > 0 ? "Program" : ""}</strong>
+      <strong>{props.program.workouts.length > 0 ? "Program" : ""}</strong>
+      <br></br>
+      <p>{props.description}</p>
       <br></br>
 
-      {props.program.map((workout, key) => (
+      {props.program.workouts.map((workout, key) => (
         <div className="Workout" key={key}>
           <br></br>
-          <strong>{workout.workoutName}</strong>
+          <strong>{workout.name}</strong>
           <br></br>
           {workout.exercises.map((exercise, key) => (
             <div className="Exercise" key={key}>
