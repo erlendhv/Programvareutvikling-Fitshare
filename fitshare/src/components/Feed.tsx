@@ -55,11 +55,22 @@ export function Feed(props: UserProps) {
             post.liked = !post.liked;
             if (post.liked) {
                 post.likes += 1;
+                post.likedBy.push(props.currentUser.uid);
             } else {
                 post.likes -= 1;
+                post.likedBy = post.likedBy.filter(
+                    (uid) => uid !== props.currentUser.uid
+                );
             }
         }
         setPosts(newPosts);
+
+        // Update post in database
+        const postRef = firebase.firestore().collection("posts").doc(id);
+        postRef.update({
+            likes: post?.likes,
+            likedBy: post?.likedBy,
+        });
     }
 
     function addComment(id: string, comment: string) {
@@ -75,6 +86,12 @@ export function Feed(props: UserProps) {
         }
 
         setPosts(newPosts);
+
+        // Update post in database
+        const postRef = firebase.firestore().collection("posts").doc(id);
+        postRef.update({
+            comments: post?.comments,
+        });
     }
     const currentUserRef = firebase
         .firestore()
