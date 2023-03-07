@@ -103,8 +103,6 @@ export function Feed(props: UserProps) {
         let friendsUnsubscribe: firebase.Unsubscribe | undefined;
         let postsUnsubscribe: firebase.Unsubscribe | undefined;
 
-        setPosts([]);
-
         if (currentUserData) {
             if (currentUserData.friends.length > 0) {
                 const friendsRef = firebase
@@ -185,7 +183,11 @@ export function Feed(props: UserProps) {
                                     timeStamp: firebase.firestore.Timestamp.now(),
                                 };
 
-                                setPosts((posts) => [...posts, newPost]);
+                                // Only add post if it doesn't already exist
+                                if (!posts.find((post) => post.id === postData?.id)
+                                ) {
+                                    setPosts((posts) => [...posts, newPost]);
+                                }
                             });
                         });
                     });
