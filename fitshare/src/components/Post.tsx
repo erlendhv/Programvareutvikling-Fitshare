@@ -30,7 +30,6 @@ export function Post(props: {
   comments: { person: string; content: string; }[],
   toggleLiked: (id: string) => void, addComment: (id: string, comment: string) => void
 }) {
-
   const [userComment, setUserComment] = useState("");
 
   return <div className="Post">
@@ -65,21 +64,30 @@ export function Post(props: {
 
       {props.comments.length > 0 ? <><strong>Comments</strong></> : null}
 
-      <input className="Comment-input" placeholder="Write a comment!" value={userComment} onChange={(e) => setUserComment(e.target.value)} />
+        <input
+          className="Comment-input"
+          placeholder="Write a comment!"
+          value={userComment}
+          onChange={(e) => setUserComment(e.target.value)}
+        />
 
-      <div className="Comment-icon" onClick={() => {
-        setUserComment("")
-        props.addComment(props.id, userComment)
+        <div
+          className="Comment-icon"
+          onClick={() => {
+            setUserComment("");
+            props.addComment(props.id, userComment);
+          }}
+        >
+          Comment
+          <AiOutlineComment key={props.id} />
+        </div>
 
-      }} >
-        Comment
-        <AiOutlineComment key={props.id} />
+        {props.comments.map((comment, key) => (
+          <div key={key} className="Comment-text">
+            <strong>{comment.person}:</strong> {comment.content}
+          </div>
+        ))}
       </div>
-
-      {props.comments.map((comment, key) => (
-        <div key={key} className="Comment-text"><strong>{comment.person}:</strong> {comment.content}</div>
-      ))}
-
     </div>
-  </div>;
+  );
 }

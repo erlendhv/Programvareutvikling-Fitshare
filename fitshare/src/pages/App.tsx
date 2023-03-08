@@ -160,10 +160,8 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       <div className="Middle">
         <div className="Top-bar">{currentPageName}</div>
 
-        <div className="Post-buttons">
-          <div className="Post-button">Post Program</div>
-
-          <div className="Post-button">Post Image</div>
+        <div className="Post-button" onClick={handlePost}>
+          Create Post
         </div>
 
         <Feed currentUser={currentUser} />
