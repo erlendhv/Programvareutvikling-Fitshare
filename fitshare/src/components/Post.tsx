@@ -2,10 +2,32 @@ import { useState } from "react";
 import { FiThumbsUp } from "react-icons/fi";
 import { AiOutlineComment } from "react-icons/ai";
 
+interface ExerciseView {
+  name?: string;
+  sets?: number;
+  reps?: number;
+}
+
+interface WorkoutView {
+  name?: string;
+  exercises: ExerciseView[];
+
+}
+
+interface ProgramView {
+  name: string;
+  workouts: WorkoutView[];
+}
+
 export function Post(props: {
-  id: string, name: string,
-  program: { workoutName: string; exercises: { name: string; sets: number; reps: number; }[]; }[],
-  image: string, likes: number, liked: boolean, comments: { person: string; content: string; }[],
+  id: string,
+  name: string,
+  description: string,
+  program: ProgramView,
+  image?: string,
+  likes: number,
+  liked: boolean,
+  comments: { person: string; content: string; }[],
   toggleLiked: (id: string) => void, addComment: (id: string, comment: string) => void
 }) {
 
@@ -20,13 +42,13 @@ export function Post(props: {
     <strong>{props.name}</strong>
     <br></br>
     <div className="Post-content">
-      <strong>{props.program.length > 0 ? "Program" : ""}</strong>
-      <br></br>
+      <strong>{props.program.workouts.length > 0 ? "Program" : null}</strong>
+      <p className="Post-description">{props.description}</p>
 
-      {props.program.map((workout, key) => (
+      {props.program.workouts.map((workout, key) => (
         <div className="Workout" key={key}>
           <br></br>
-          <strong>{workout.workoutName}</strong>
+          <strong>{workout.name}</strong>
           <br></br>
           {workout.exercises.map((exercise, key) => (
             <div className="Exercise" key={key}>
@@ -39,9 +61,9 @@ export function Post(props: {
         </div>
       ))}
 
-      {props.image ? <><br></br> <img src={props.image} className="Post-image" alt="Exercise" /></> : ""}
+      {props.image ? <><br></br> <img src={props.image} className="Post-image" alt="Exercise" /></> : null}
 
-      {props.comments.length > 0 ? <><br></br><strong>Comments</strong></> : ""}
+      {props.comments.length > 0 ? <><strong>Comments</strong></> : null}
 
       <input className="Comment-input" placeholder="Write a comment!" value={userComment} onChange={(e) => setUserComment(e.target.value)} />
 
