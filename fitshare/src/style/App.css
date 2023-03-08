@@ -184,11 +184,19 @@
   width: 100%;
   height: auto;
   margin: 10px;
-  font-size: 28px;
+  font-size: 24px;
+}
+
+.Post-description {
+  position: relative;
+  width: 100%;
+  height: auto;
+  margin: 10px;
+  font-size: 20px;
 }
 
 .Workout {
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .Exercise {
