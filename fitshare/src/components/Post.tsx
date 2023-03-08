@@ -32,7 +32,7 @@ export function Post(props: {
 }) {
   const [userComment, setUserComment] = useState("");
 
-  return <div className="Post">
+  return (<div className="Post">
     <div className="Post-likes">{props.likes} </div>
     <FiThumbsUp key={props.id} className="Thumb-icon"
       style={{ fill: props.liked ? "yellow" : "" }} onClick={() => {
@@ -60,34 +60,34 @@ export function Post(props: {
         </div>
       ))}
 
-      {props.image ? <><br></br> <img src={props.image} className="Post-image" alt="Exercise" /></> : null}
+      {props.image ? <><br></br> <img src={props.image} className="Post-image" alt="Exercise" /></> : ""}
 
-      {props.comments.length > 0 ? <><strong>Comments</strong></> : null}
+      {props.comments.length > 0 ? <><strong>Comments</strong></> : ""}
 
-        <input
-          className="Comment-input"
-          placeholder="Write a comment!"
-          value={userComment}
-          onChange={(e) => setUserComment(e.target.value)}
-        />
+      <input
+        className="Comment-input"
+        placeholder="Write a comment!"
+        value={userComment}
+        onChange={(e) => setUserComment(e.target.value)}
+      />
 
-        <div
-          className="Comment-icon"
-          onClick={() => {
-            setUserComment("");
-            props.addComment(props.id, userComment);
-          }}
-        >
-          Comment
-          <AiOutlineComment key={props.id} />
-        </div>
-
-        {props.comments.map((comment, key) => (
-          <div key={key} className="Comment-text">
-            <strong>{comment.person}:</strong> {comment.content}
-          </div>
-        ))}
+      <div
+        className="Comment-icon"
+        onClick={() => {
+          setUserComment("");
+          props.addComment(props.id, userComment);
+        }}
+      >
+        Comment
+        <AiOutlineComment key={props.id} />
       </div>
+
+      {props.comments.map((comment, key) => (
+        <div key={key} className="Comment-text">
+          <strong>{comment.person}:</strong> {comment.content}
+        </div>
+      ))}
     </div>
+  </div>
   );
 }

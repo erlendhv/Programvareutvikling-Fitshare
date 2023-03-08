@@ -48,6 +48,10 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     navigate("/programs");
   };
 
+  const handlePost = () => {
+    navigate("/newpost");
+  };
+
   const [inGroupFeed, setInGroupFeed] =
     useState<boolean>(false);
 
