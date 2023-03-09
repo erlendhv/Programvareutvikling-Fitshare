@@ -42,6 +42,7 @@ const LoginPage: React.FC = () => {
         programs: [],
         posts: [],
         groups: [],
+        interest: [],
 
       };
       await currentUserDoc.set(userData);
@@ -51,7 +52,7 @@ const LoginPage: React.FC = () => {
   checkUserExists();
   return (
     <div className="LoginPage">
-      <section>{user ? <Main currentUser={user as firebase.User} /> : <SignIn />}</section>
+      <section>{user ? (user.interest > 0 ? <Interest /> : <Main currentUser={user as firebase.User} />) : <SignIn />}</section>
     </div>
   );
 };
