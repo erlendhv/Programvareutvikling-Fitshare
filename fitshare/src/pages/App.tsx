@@ -2,6 +2,7 @@ import { Post } from '../components/Post';
 import { Group } from '../components/Group';
 import { Friend } from '../components/Friend';
 import { Popup } from '../components/Popup';
+import { RecommendedPost } from '../components/RecommendedPost';
 import './../style/App.css';
 import './../style/NewProgram.css';
 import ExercisePhoto from './../ExercisePhoto.jpeg';
@@ -231,6 +232,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
         </div>
 
         <div className="Group-feed">
+          <RecommendedPost currentUser={currentUser as firebase.User}/>
           {posts.map((post) => (
             <Post
               key={post.id}

@@ -52,7 +52,6 @@ const LoginPage: React.FC = () => {
   };
 
   checkUserExists();
-  console.log("8888888888888", interest)
 
   
   return (
