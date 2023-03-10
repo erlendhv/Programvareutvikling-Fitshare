@@ -47,6 +47,8 @@ interface UserProps {
 export function Feed(props: UserProps) {
     const [posts, setPosts] = useState<Post[]>([]);
 
+    const uniquePostIds = new Set<string>();
+
     function toggleLiked(id: string) {
         const newPosts = [...posts];
         const post = newPosts.find((post) => post.id === id);
@@ -84,7 +86,6 @@ export function Feed(props: UserProps) {
                 content: comment,
             });
         }
-
         setPosts(newPosts);
 
         // Update post in database
@@ -115,10 +116,8 @@ export function Feed(props: UserProps) {
                     );
 
                 friendsUnsubscribe = friendsRef.onSnapshot((querySnapshot) => {
-                    const friendsIterate: any = [];
                     querySnapshot.forEach((doc) => {
                         const friend = doc.data();
-                        friendsIterate.push(friend);
 
                         friend.posts.forEach((post: string) => {
 
@@ -129,7 +128,12 @@ export function Feed(props: UserProps) {
                                 .doc(post);
 
                             postsUnsubscribe = postRef.onSnapshot((doc) => {
+
                                 const postData = doc.data();
+
+                                if (uniquePostIds.has(postData?.id)) {
+                                    return;
+                                }
 
                                 const postProgramRef = postData?.program;
                                 const postProgramWorkouts = postProgramRef?.split("*Workout*");
@@ -160,7 +164,6 @@ export function Feed(props: UserProps) {
                                     newPostProgram.workouts.push(newWorkout);
                                 });
 
-                                newPostProgram.name = "";
 
                                 // Check if current user has liked post
                                 let liked = false;
@@ -180,14 +183,12 @@ export function Feed(props: UserProps) {
                                     comments: postData?.comments,
                                     likedBy: postData?.likedBy,
                                     owner: friend.uid,
-                                    timeStamp: firebase.firestore.Timestamp.now(),
+                                    timeStamp: postData?.timeStamp,
                                 };
 
-                                // Only add post if it doesn't already exist
-                                if (!posts.find((post) => post.id === postData?.id)
-                                ) {
-                                    setPosts((posts) => [...posts, newPost]);
-                                }
+                                setPosts((posts) => [...posts, newPost]);
+
+                                uniquePostIds.add(postData?.id);
                             });
                         });
                     });
@@ -202,20 +203,24 @@ export function Feed(props: UserProps) {
 
 
     return <div className="Group-feed">
-        {posts.map((post, key) => (
-            <Post
-                key={key} // TODO: Change to post.id (error occurs when post.id is used)
-                id={post.id}
-                name={post.name}
-                description={post.description}
-                program={post.program}
-                image={post.image}
-                likes={post.likes}
-                liked={post.liked}
-                comments={post.comments}
-                toggleLiked={toggleLiked}
-                addComment={addComment}
-            />
-        ))}
+
+        {
+            posts.sort((a, b) => {
+                return b.timeStamp.toMillis() - a.timeStamp.toMillis();
+            }).map((post, key) => (
+                <Post
+                    key={key} // TODO: Change to post.id (error occurs when post.id is used)
+                    id={post.id}
+                    name={post.name}
+                    description={post.description}
+                    program={post.program}
+                    image={post.image}
+                    likes={post.likes}
+                    liked={post.liked}
+                    comments={post.comments}
+                    toggleLiked={toggleLiked}
+                    addComment={addComment}
+                />
+            ))}
     </div>;
 }
