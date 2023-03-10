@@ -41,7 +41,7 @@ export function Post(props: {
     <strong>{props.name}</strong>
     <br></br>
     <div className="Post-content">
-      <strong>{props.program.workouts.length > 0 ? "Program" : null}</strong>
+      <strong>{props.program.workouts.length > 0 ? props.program.name : null}</strong>
       <p className="Post-description">{props.description}</p>
 
       {props.program.workouts.map((workout, key) => (
