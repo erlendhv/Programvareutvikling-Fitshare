@@ -51,6 +51,7 @@ interface Post {
   likedBy: [];
   likes: number;
   program: string;
+  timeStamp: firebase.firestore.Timestamp;
 }
 
 export function NewPost(props: { currentUser: firebase.User }) {
@@ -91,7 +92,8 @@ export function NewPost(props: { currentUser: firebase.User }) {
       comments: [],
       likedBy: [],
       likes: 0,
-      program: programString
+      program: programString,
+      timeStamp: firebase.firestore.Timestamp.now()
     };
 
     const programCollection = firebase.firestore().collection("posts");
