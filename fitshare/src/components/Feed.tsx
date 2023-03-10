@@ -105,6 +105,22 @@ export function Feed(props: UserProps) {
         let postsUnsubscribe: firebase.Unsubscribe | undefined;
 
         if (currentUserData) {
+
+            // Get posts from current user
+            currentUserData.posts.forEach((post: string) => {
+                // Get post data from database
+                const postRef = firebase
+                    .firestore()
+                    .collection("posts")
+                    .doc(post);
+
+                postsUnsubscribe = postRef.onSnapshot((doc) => {
+                    const postData = doc.data();
+                    addPost(currentUserData, postData);
+                });
+            });
+
+            // Get posts from friends
             if (currentUserData.friends.length > 0) {
                 const friendsRef = firebase
                     .firestore()
@@ -131,64 +147,8 @@ export function Feed(props: UserProps) {
 
                                 const postData = doc.data();
 
-                                if (uniquePostIds.has(postData?.id)) {
-                                    return;
-                                }
+                                addPost(friend, postData);
 
-                                const postProgramRef = postData?.program;
-                                const postProgramWorkouts = postProgramRef?.split("*Workout*");
-
-                                const newPostProgram: ProgramView = {
-                                    name: postProgramWorkouts.shift(),
-                                    workouts: [],
-                                }
-
-                                postProgramWorkouts?.forEach((workout: string) => {
-                                    const workoutExercises = workout.split("*Exercise*");
-                                    const newWorkout: WorkoutView = {
-                                        name: workoutExercises.shift(),
-                                        exercises: [],
-                                    };
-
-                                    workoutExercises?.forEach((exercise: string) => {
-                                        const exerciseSets = exercise.split("*Sets*");
-                                        const exerciseReps = exerciseSets[1].split("*Reps*");
-                                        const newExercise: ExerciseView = {
-                                            name: exerciseSets.shift(),
-                                            sets: parseInt(exerciseSets[0]),
-                                            reps: parseInt(exerciseReps[1]),
-                                        };
-                                        newWorkout.exercises.push(newExercise);
-                                    });
-
-                                    newPostProgram.workouts.push(newWorkout);
-                                });
-
-
-                                // Check if current user has liked post
-                                let liked = false;
-                                postData?.likedBy.map((person: string) => {
-                                    if (person === props.currentUser.uid) {
-                                        liked = true;
-                                    }
-                                });
-
-                                const newPost: Post = {
-                                    id: postData?.id,
-                                    name: friend.displayName,
-                                    description: postData?.description,
-                                    program: newPostProgram,
-                                    likes: postData?.likedBy.length,
-                                    liked: liked,
-                                    comments: postData?.comments,
-                                    likedBy: postData?.likedBy,
-                                    owner: friend.uid,
-                                    timeStamp: postData?.timeStamp,
-                                };
-
-                                setPosts((posts) => [...posts, newPost]);
-
-                                uniquePostIds.add(postData?.id);
                             });
                         });
                     });
@@ -200,6 +160,67 @@ export function Feed(props: UserProps) {
             };
         }
     }, [currentUserData]);
+
+    function addPost(author: firebase.firestore.DocumentData, postData?: firebase.firestore.DocumentData) {
+        if (uniquePostIds.has(postData?.id)) {
+            return;
+        }
+
+        const postProgramRef = postData?.program;
+        const postProgramWorkouts = postProgramRef?.split("*Workout*");
+
+        const newPostProgram: ProgramView = {
+            name: postProgramWorkouts.shift(),
+            workouts: [],
+        }
+
+        postProgramWorkouts?.forEach((workout: string) => {
+            const workoutExercises = workout.split("*Exercise*");
+            const newWorkout: WorkoutView = {
+                name: workoutExercises.shift(),
+                exercises: [],
+            };
+
+            workoutExercises?.forEach((exercise: string) => {
+                const exerciseSets = exercise.split("*Sets*");
+                const exerciseReps = exerciseSets[1].split("*Reps*");
+                const newExercise: ExerciseView = {
+                    name: exerciseSets.shift(),
+                    sets: parseInt(exerciseSets[0]),
+                    reps: parseInt(exerciseReps[1]),
+                };
+                newWorkout.exercises.push(newExercise);
+            });
+
+            newPostProgram.workouts.push(newWorkout);
+        });
+
+
+        // Check if current user has liked post
+        let liked = false;
+        postData?.likedBy.map((person: string) => {
+            if (person === props.currentUser.uid) {
+                liked = true;
+            }
+        });
+
+        const newPost: Post = {
+            id: postData?.id,
+            name: author.displayName,
+            description: postData?.description,
+            program: newPostProgram,
+            likes: postData?.likedBy.length,
+            liked: liked,
+            comments: postData?.comments,
+            likedBy: postData?.likedBy,
+            owner: author.uid,
+            timeStamp: postData?.timeStamp,
+        };
+
+        setPosts((posts) => [...posts, newPost]);
+
+        uniquePostIds.add(postData?.id);
+    }
 
 
     return <div className="Group-feed">
