@@ -8,6 +8,7 @@ import "firebase/compat/analytics";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import Main from "../Main";
+import Interest from "./Interest";
 import "../style/LoginPage.css";
 
 firebase.initializeApp({
@@ -26,6 +27,7 @@ const analytics: firebase.analytics.Analytics = firebase.analytics();
 
 const LoginPage: React.FC = () => {
   const [user] = useAuthState(auth as any);
+  const [interest, setInterest] = useState(0);
 
   // check if the current user exists in Firestore
   const checkUserExists = async () => {
@@ -50,9 +52,12 @@ const LoginPage: React.FC = () => {
   };
 
   checkUserExists();
+  console.log("8888888888888", interest)
+
+  
   return (
     <div className="LoginPage">
-      <section>{user ? (user.interest > 0 ? <Interest /> : <Main currentUser={user as firebase.User} />) : <SignIn />}</section>
+      <section>{user ? (interest === 0 ? <Interest user={user as firebase.User} interest={interest} setInterest={setInterest}/> : <Main currentUser={user as firebase.User} />) : <SignIn />}</section>
     </div>
   );
 };
