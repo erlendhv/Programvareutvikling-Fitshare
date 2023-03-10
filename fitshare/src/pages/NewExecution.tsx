@@ -2,7 +2,6 @@ import { Post } from '../components/Post';
 import { Group } from '../components/Group';
 import { Friend } from '../components/Friend';
 import { Popup } from '../components/Popup';
-// import './../style/App.css';
 import './../style/NewExecution.css';
 import ExercisePhoto from '.m../ExercisePhoto.jpeg';
 import FitShareLogo from './../FitShareLogo.png';
@@ -15,6 +14,8 @@ import firebase from "firebase/compat/app"
 import { useDocumentData, useCollectionData } from "react-firebase-hooks/firestore";
 import { BiArrowBack } from 'react-icons/bi';
 import { AiOutlineSearch } from 'react-icons/ai'
+import { GiWeightLiftingUp } from 'react-icons/gi'
+import { Execution } from '../components/Execution';
 
 
 interface Exercise {
@@ -25,9 +26,12 @@ interface Exercise {
     owner: string;
 }
 
-interface UserData {
+interface Execution {
     id: string;
-    displayName: string;
+    name: string;
+    owner: string;
+    weight: string;
+    date: Date;
 }
 
 
@@ -35,10 +39,6 @@ export function NewExecution(Props: { currentUser: firebase.User }) {
 
     const handleBack = () => {
         navigate('/programs');
-    };
-
-    const handleAddExecution = (exerciseId: string) => {
-        console.log("Add execution");
     };
 
     const navigate = useNavigate();
@@ -53,29 +53,54 @@ export function NewExecution(Props: { currentUser: firebase.User }) {
         }
     ]);
 
+    const [weight, setWeight] = useState("");
+
+    const [loggedExercises, setLoggedExercises] = useState<Exercise[]>([]);
+
     const [searchWord, setSearchWord] = useState("");
 
-    const [users, setUsers] = useState<UserData[]>([]);
+    const [exerciseNames, setExerciseNames] = useState<string[]>([]);
 
     const handleSearch = async () => {
+        exerciseNames.splice(0);
         const usersCollection = firebase.firestore().collection("exercise");
         const querySnapshot = await usersCollection.where("name", ">=", searchWord).get();
         const matchingExercises: Exercise[] = [];
         querySnapshot.forEach((doc) => {
             const exercise = doc.data() as Exercise;
-            if (exercise.owner === Props.currentUser.uid) {
+            if (exercise.owner === Props.currentUser.uid && !exerciseNames.includes(exercise.name)) {
                 matchingExercises.push(exercise);
+                exerciseNames.push(exercise.name);
             }
         });
         setExercises(matchingExercises);
     };
 
+    const handleAddExecution = (exercise: Exercise) => {
+        console.log("Add execution");
+        if (weight !== "") {
+            setLoggedExercises([...loggedExercises, exercise]);
+            saveWeight(exercise);
+        }
+    };
+
+    const saveWeight = async (exercise: Exercise) => {
+        const newExecution: Execution = {
+            id: uuidv4(),
+            name: exercise.name,
+            owner: Props.currentUser.uid,
+            weight: weight,
+            date: new Date(),
+        };
+
+        const executionCollection = firebase.firestore().collection("execution");
+        executionCollection.doc(newExecution.id).set(newExecution);
+        setWeight("");
+    }
 
     return (
         <div className="Execution-container">
             <BiArrowBack className="Back-button" onClick={handleBack} />
-            <></>
-            <></>
             <h1>New Execution</h1>
             <div className="Searchbar-content">
                 <input className="Input-field" type="text" placeholder={"Exercise"} value={searchWord} onChange={(e) => setSearchWord(e.target.value)} />
@@ -87,8 +112,11 @@ export function NewExecution(Props: { currentUser: firebase.User }) {
                         {
                             exercise.name.toLowerCase().includes(searchWord.toLowerCase()) ?
                                 <div key={key} className="Exercise-popup-inner">
-                                    <Friend name={exercise.name} />
-                                    <div className="Log-execution-button" onClick={() => handleAddExecution(exercise.id)}>{'Log'}</div>
+                                    <Execution name={exercise.name} />
+                                    <input className="Input-field" type="text" placeholder={"Weight"}
+                                        onChange={(e) => Number.isInteger(parseInt(e.target.value)) ? setWeight(e.target.value) : null} />
+                                    <div className="Log-execution-button"
+                                        onClick={() => handleAddExecution(exercise)}>{loggedExercises.includes(exercise) ? 'Logged' : 'Log'}</div>
                                 </div>
                                 : null
                         }
