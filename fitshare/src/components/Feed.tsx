@@ -40,11 +40,20 @@ interface ProgramView {
     workouts: WorkoutView[];
 }
 
-interface UserProps {
+interface FeedInfo {
     currentUser: firebase.User;
+    currentGroup: GroupData | null;
 }
 
-export function Feed(props: UserProps) {
+interface GroupData {
+    id: string;
+    name: string;
+    members: string[];
+    admin: string;
+    posts: string[];
+}
+
+export function Feed(props: FeedInfo) {
     const [posts, setPosts] = useState<Post[]>([]);
 
     const uniquePostIds = new Set<string>();
@@ -108,6 +117,34 @@ export function Feed(props: UserProps) {
 
         if (currentUserData) {
 
+            if (props.currentGroup) {
+                // Get current group from database
+                const groupRef = firebase
+                    .firestore()
+                    .collection("groups")
+                    .doc(props.currentGroup.id);
+
+                // Get posts from current group
+                groupRef.onSnapshot((doc) => {
+                    const groupData = doc.data();
+                    if (groupData) {
+                        groupData.posts.forEach((post: string) => {
+                            // Get post data from database
+                            const postRef = firebase
+                                .firestore()
+                                .collection("posts")
+                                .doc(post);
+
+                            postsUnsubscribe = postRef.onSnapshot((doc) => {
+                                const postData = doc.data();
+                                addPost(currentUserData, postData);
+                            });
+                        });
+                    }
+                });
+                return;
+            }
+
             // Get posts from current user
             currentUserData.posts.forEach((post: string) => {
                 // Get post data from database
@@ -161,7 +198,7 @@ export function Feed(props: UserProps) {
                 if (postsUnsubscribe) postsUnsubscribe();
             };
         }
-    }, [currentUserData]);
+    }, [currentUserData, props.currentGroup]);
 
     function addPost(author: firebase.firestore.DocumentData, postData?: firebase.firestore.DocumentData) {
         if (uniquePostIds.has(postData?.id)) {

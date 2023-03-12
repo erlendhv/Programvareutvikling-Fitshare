@@ -25,6 +25,7 @@ interface GroupData {
   name: string;
   members: string[];
   admin: string;
+  posts: string[];
 }
 
 interface Friend {
@@ -159,7 +160,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       }
     }
   }, [currentUserData]);
-  
+
   return (
     <div className="App">
       {/* LEFT SIDE */}
@@ -195,7 +196,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           Create Post
         </div>
 
-        <Feed currentUser={currentUser} />
+        <Feed currentUser={currentUser} currentGroup={currentGroup} />
       </div>
 
       {/* RIGHT SIDE */}
