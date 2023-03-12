@@ -52,21 +52,26 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     navigate("/newpost");
   };
 
-  const [inGroupFeed, setInGroupFeed] =
-    useState<boolean>(false);
+  const [currentGroup, setCurrentGroup] = useState<GroupData | null>(null);
+
+  const [membersOverhead, setMembersOverhead] = useState<string>("Friends");
+  const [AddFriendIcon, setAddFriendIcon] = useState<string>("Add-friend-icon");
+
+  const [currentPageName, setCurrentPageName] = useState<string>("Homepage");
+  const [inGroupFeed, setInGroupFeed] = useState<boolean>(false);
 
 
-  const handleSetCurrentPage = (group: GroupData) => {
-
+  const handleSetCurrentGroup = (group: GroupData) => {
+    setCurrentGroup(group);
+    setInGroupFeed(true);
+    setCurrentPageName(group.name);
   }
 
   const goToHomePage = () => {
+    setCurrentGroup(null);
     setInGroupFeed(false);
     setCurrentPageName("Homepage")
   }
-
-  const [currentPageName, setCurrentPageName] = useState<string>("Homepage");
-
 
   // This is to get data about currentuser's friends
   // ref to current user in users collection firebase
@@ -78,7 +83,33 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
 
   const [friendsData, setFriendsData] = useState<any>(null);
   const [groupsData, setGroupsData] = useState<any>(null);
+  const [membersData, setMembersData] = useState<any>(null);
 
+  useEffect(() => {
+    if (currentGroup) {
+      setMembersOverhead("Group members");
+      setAddFriendIcon("");
+      const membersRef = firebase
+        .firestore()
+        .collection("users")
+        .where(
+          firebase.firestore.FieldPath.documentId(),
+          "in",
+          currentGroup.members);
+
+      membersRef.onSnapshot((querySnapshot) => {
+        const members: any = [];
+        querySnapshot.forEach((doc) => {
+          members.push(doc.data());
+        });
+        setMembersData(members);
+      });
+    } else {
+      setCurrentPageName("Homepage");
+      setMembersOverhead("Friends")
+      setAddFriendIcon("Add-friend-icon")
+    }
+  }, [inGroupFeed, currentGroup]);
 
   useEffect(() => {
     let friendsUnsubscribe: firebase.Unsubscribe | undefined;
@@ -126,13 +157,9 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       } else {
         setGroupsData([]);
       }
-
-      return () => {
-        if (friendsUnsubscribe) friendsUnsubscribe();
-        if (groupsUnsubcribe) groupsUnsubcribe();
-      };
     }
   }, [currentUserData]);
+  
   return (
     <div className="App">
       {/* LEFT SIDE */}
@@ -154,7 +181,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           {groupsData
             ? groupsData.map((group: GroupData) => (
               <Group key={group.id} name={group.name}
-                onClick={() => handleSetCurrentPage(group)} />
+                onClick={() => handleSetCurrentGroup(group)} />
             ))
             : null}
         </div>
@@ -178,18 +205,33 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
         </div>
 
         <div className="Friends">
-          <strong>Friends</strong>
-          <AiOutlineUserAdd
-            className="Add-friend-icon"
-            onClick={() => {
-              setIsShowingFriendPopUp(true);
-            }}
-          />
-          {friendsData
-            ? friendsData.map((friend: any) => (
-              <Friend key={friend.id} name={friend.displayName} />
-            ))
-            : null}
+          <strong>{membersOverhead}</strong>
+          {
+            // Render add friend icon if not in group feed
+            !inGroupFeed &&
+            <AiOutlineUserAdd
+              className="Add-friend-icon"
+              onClick={() => {
+                setIsShowingFriendPopUp(true);
+              }}
+            />}
+
+          {
+            inGroupFeed ?
+              membersData
+                ? membersData.map((member: any) => (
+                  <Friend key={member.id} name={member.displayName} />
+                )
+                )
+                : null
+              :
+
+              friendsData
+                ? friendsData.map((friend: any) => (
+                  <Friend key={friend.id} name={friend.displayName} />
+                ))
+                : null
+          }
         </div>
       </div>
 
@@ -207,17 +249,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       ) : null}
 
       <div>
-        {inGroupFeed ? (
-          // Code to execute if `inGroupFeed` is true
-          <>
-            handleSetCurrentPage()
-          </>
-        ) : (
-          // Code to execute if `inGroupFeed` is false
-          <>
-
-          </>
-        )}
+        {currentPageName}
       </div>
     </div>
   );

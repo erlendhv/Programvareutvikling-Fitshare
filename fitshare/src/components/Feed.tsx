@@ -104,6 +104,8 @@ export function Feed(props: UserProps) {
         let friendsUnsubscribe: firebase.Unsubscribe | undefined;
         let postsUnsubscribe: firebase.Unsubscribe | undefined;
 
+        setPosts([]);
+
         if (currentUserData) {
 
             // Get posts from current user
