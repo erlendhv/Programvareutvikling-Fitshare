@@ -75,6 +75,7 @@
 }
 
 .Group-icon:hover {
+  margin-top: 10px;
   border: 5px solid #cec70d;
   cursor: pointer;
 }
@@ -88,7 +89,7 @@
   width: 60%;
   height: 0;
   padding-bottom: 60%;
-  margin-top: 20px;
+  margin-top: 10px;
 
   background-color: lightyellow;
   border: 5px solid #fff500;
