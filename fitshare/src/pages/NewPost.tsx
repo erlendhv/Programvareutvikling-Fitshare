@@ -10,6 +10,7 @@ import "firebase/compat/auth";
 import "firebase/compat/analytics";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { PostPreview } from "./../components/PostPreview";
+import { Group } from "../components/Group";
 
 interface Exercise {
   name: string;
@@ -52,6 +53,14 @@ interface Post {
   likes: number;
   program: string;
   timeStamp: firebase.firestore.Timestamp;
+}
+
+interface GroupData {
+  id: string;
+  name: string;
+  members: string[];
+  admin: string;
+  posts: string[];
 }
 
 export function NewPost(props: { currentUser: firebase.User }) {
@@ -98,15 +107,64 @@ export function NewPost(props: { currentUser: firebase.User }) {
 
     const programCollection = firebase.firestore().collection("posts");
     programCollection.doc(newPost.id).set(newPost);
-    const currentUserRef = firebase.firestore().collection("users").doc(props.currentUser.uid);
-    await currentUserRef.update({
-      posts: firebase.firestore.FieldValue.arrayUnion(newPost.id)
-    });
+
+    if (selectedGroups && selectedGroups.length > 0) {
+      selectedGroups.forEach((group: GroupData) => {
+        const groupRef = firebase.firestore().collection("groups").doc(group.id);
+        groupRef.update({
+          posts: firebase.firestore.FieldValue.arrayUnion(newPost.id)
+        });
+      });
+    }
+    else {
+      const currentUserRef = firebase.firestore().collection("users").doc(props.currentUser.uid);
+      await currentUserRef.update({
+        posts: firebase.firestore.FieldValue.arrayUnion(newPost.id)
+      });
+    }
 
     navigate('/');
   };
 
+  const currentUserRef = firebase
+    .firestore()
+    .collection("users")
+    .doc(props.currentUser.uid);
+  const [currentUserData] = useDocumentData(currentUserRef as any);
+
+
   const [description, setDescription] = useState<string>("Dette er en description");
+
+  useEffect(() => {
+    let groupsUnsubcribe: firebase.Unsubscribe | undefined;
+
+    if (currentUserData) {
+
+      if (currentUserData.groups.length > 0) {
+        const groupsRef = firebase
+          .firestore()
+          .collection("groups")
+          .where(
+            firebase.firestore.FieldPath.documentId(),
+            "in",
+            currentUserData.groups
+          );
+
+        groupsUnsubcribe = groupsRef.onSnapshot((querySnapshot) => {
+          const groups: any = [];
+          querySnapshot.forEach((doc) => {
+            groups.push(doc.data());
+          });
+          setGroupsData(groups);
+        });
+      } else {
+        setGroupsData([]);
+      }
+    }
+  }, [currentUserData]);
+
+  const [groupsData, setGroupsData] = useState<any>(null);
+  const [selectedGroups, setSelectedGroups] = useState<any>(null);
 
   const [programs, setPrograms] = useState<Program[]>([
     {
@@ -132,12 +190,6 @@ export function NewPost(props: { currentUser: firebase.User }) {
       }]
     }
   ]);
-
-  const currentUserRef = firebase
-    .firestore()
-    .collection("users")
-    .doc(props.currentUser.uid);
-  const [currentUserData] = useDocumentData(currentUserRef as any);
 
   useEffect(() => {
     if (currentUserData) {
@@ -201,6 +253,21 @@ export function NewPost(props: { currentUser: firebase.User }) {
     }
   }, [currentUserData]);
 
+  function toggleGroupSelected(group: any) {
+    if (selectedGroups) {
+      const index = selectedGroups.findIndex((selectedGroup: any) => selectedGroup.id === group.id);
+      if (index === -1) {
+        //@ts-ignore
+        setSelectedGroups(selectedGroups => [...selectedGroups, group]);
+      } else {
+        const newSelectedGroups = selectedGroups.filter((selectedGroup: any) => selectedGroup.id !== group.id);
+        setSelectedGroups(newSelectedGroups);
+      }
+    } else {
+      setSelectedGroups([group]);
+    }
+  }
+
   return (
     <div className="New-Post">
       <h1>Select program to post</h1>
@@ -228,6 +295,18 @@ export function NewPost(props: { currentUser: firebase.User }) {
             setDescription={setDescription}
           />
         </div>
+      </div>
+      <div className="Select-Groups">
+        {groupsData
+          ? groupsData.map((group: GroupData) => (
+            <div className="Select-Group">
+              <Group key={group.id} name={group.name}
+                onClick={() => toggleGroupSelected(group)}
+                selected={selectedGroups ? selectedGroups.find((selectedGroup: any) => selectedGroup.id === group.id) : false}
+              />
+            </div>
+          ))
+          : null}
       </div>
       <div className="New-post-button" onClick={publishPost}>Post</div>
     </div>

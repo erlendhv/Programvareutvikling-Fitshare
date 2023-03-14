@@ -9,6 +9,7 @@
   user-select: none;
   align-items: center;
 }
+
 .Overviews {
   display: flex;
   flex-direction: row;
@@ -132,6 +133,27 @@
   background: #7f7700;
 }
 
+.Select-Groups {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 80%;
+  height: auto;
+  flex-wrap: wrap;
+}
+
+.Select-Group {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 150px;
+  height: 150px;
+  font-size: 20px;
+  text-overflow: wrap;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
 .New-post-button {
   width: 10%;
   height: 40px;
@@ -154,6 +176,7 @@
 .New-post-button:active {
   background: #008000;
 }
+
 textarea {
   width: 400px;
   padding: 12px;
