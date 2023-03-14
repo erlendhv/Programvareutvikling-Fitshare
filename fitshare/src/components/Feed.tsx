@@ -127,7 +127,7 @@ export function Feed(props: FeedInfo) {
                 // Get posts from current group
                 groupRef.onSnapshot((doc) => {
                     const groupData = doc.data();
-                    if (groupData) {
+                    if (groupData?.posts) {
                         groupData.posts.forEach((post: string) => {
                             // Get post data from database
                             const postRef = firebase
@@ -193,6 +193,41 @@ export function Feed(props: FeedInfo) {
                     });
                 });
             }
+
+            // Get posts from groups
+            if (currentUserData.groups.length > 0) {
+                const groupsRef = firebase
+                    .firestore()
+                    .collection("groups")
+                    .where(
+                        firebase.firestore.FieldPath.documentId(),
+                        "in",
+                        currentUserData.groups
+                    );
+
+                groupsRef.onSnapshot((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        const group = doc.data();
+
+                        if (group.posts) {
+                            group.posts.forEach((post: string) => {
+                                // Get post data from database
+                                const postRef = firebase
+                                    .firestore()
+                                    .collection("posts")
+                                    .doc(post);
+
+                                postsUnsubscribe = postRef.onSnapshot((doc) => {
+                                    const postData = doc.data();
+                                    addPost(currentUserData, postData);
+                                });
+                            });
+                        }
+
+                    });
+                });
+            }
+
             return () => {
                 if (friendsUnsubscribe) friendsUnsubscribe();
                 if (postsUnsubscribe) postsUnsubscribe();
