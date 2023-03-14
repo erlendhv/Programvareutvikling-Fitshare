@@ -70,7 +70,6 @@
   margin-top: 20px;
 
   background-color: lightyellow;
-  border: 5px solid #fff500;
   filter: drop-shadow(-11px 15px 10px rgba(0, 0, 0, 0.25));
   border-radius: 90px;
 }
@@ -81,6 +80,28 @@
 }
 
 .Group-icon:active {
+  border: 5px solid #b3a900;
+}
+
+.Group-icon-selected {
+  position: relative;
+  width: 60%;
+  height: 0;
+  padding-bottom: 60%;
+  margin-top: 20px;
+
+  background-color: lightyellow;
+  border: 5px solid #fff500;
+  filter: drop-shadow(-11px 15px 10px rgba(0, 0, 0, 0.25));
+  border-radius: 90px;
+}
+
+.Group-icon-selected:hover {
+  border: 5px solid #cec70d;
+  cursor: pointer;
+}
+
+.Group-icon-selected:active {
   border: 5px solid #b3a900;
 }
 

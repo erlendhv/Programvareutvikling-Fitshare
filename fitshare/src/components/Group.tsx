@@ -1,8 +1,8 @@
 
-export function Group(props: { name: string, onClick: any }) {
+export function Group(props: { name: string, onClick: any, selected: boolean }) {
 
   return <>
-    <div className="Group-icon" onClick={props.onClick} >
+    <div className={props.selected ? "Group-icon-selected" : "Group-icon"} onClick={props.onClick} >
     </div>
     {props.name}
   </>;

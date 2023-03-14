@@ -182,7 +182,9 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           {groupsData
             ? groupsData.map((group: GroupData) => (
               <Group key={group.id} name={group.name}
-                onClick={() => handleSetCurrentGroup(group)} />
+                onClick={() => handleSetCurrentGroup(group)}
+                selected={group.id === currentGroup?.id}
+              />
             ))
             : null}
         </div>
