@@ -137,7 +137,18 @@ export function Feed(props: FeedInfo) {
 
                             postsUnsubscribe = postRef.onSnapshot((doc) => {
                                 const postData = doc.data();
-                                addPost(currentUserData, postData);
+
+                                const postAuthorRef = firebase
+                                    .firestore()
+                                    .collection("users")
+                                    .doc(postData?.owner);
+
+                                postAuthorRef.onSnapshot((doc) => {
+                                    const postAuthor = doc.data();
+                                    addPost(postAuthor, postData);
+
+                                });
+
                             });
                         });
                     }
@@ -219,7 +230,18 @@ export function Feed(props: FeedInfo) {
 
                                 postsUnsubscribe = postRef.onSnapshot((doc) => {
                                     const postData = doc.data();
-                                    addPost(currentUserData, postData);
+
+                                    const postAuthorRef = firebase
+                                        .firestore()
+                                        .collection("users")
+                                        .doc(postData?.owner);
+
+                                    postAuthorRef.onSnapshot((doc) => {
+                                        const postAuthor = doc.data();
+                                        addPost(postAuthor, postData);
+
+                                    });
+
                                 });
                             });
                         }
@@ -235,7 +257,7 @@ export function Feed(props: FeedInfo) {
         }
     }, [currentUserData, props.currentGroup]);
 
-    function addPost(author: firebase.firestore.DocumentData, postData?: firebase.firestore.DocumentData) {
+    function addPost(author?: firebase.firestore.DocumentData, postData?: firebase.firestore.DocumentData) {
         if (uniquePostIds.has(postData?.id)) {
             return;
         }
@@ -280,14 +302,14 @@ export function Feed(props: FeedInfo) {
 
         const newPost: Post = {
             id: postData?.id,
-            name: author.displayName,
+            name: author?.displayName,
             description: postData?.description,
             program: newPostProgram,
             likes: postData?.likedBy.length,
             liked: liked,
             comments: postData?.comments,
             likedBy: postData?.likedBy,
-            owner: author.uid,
+            owner: author?.uid,
             timeStamp: postData?.timeStamp,
         };
 
