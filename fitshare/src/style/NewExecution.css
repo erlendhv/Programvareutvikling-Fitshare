@@ -27,33 +27,6 @@
     justify-content: center;
 }
 
-.Input-field {
-    background: #484848;
-    color: whitesmoke;
-    text-indent: 10px;
-    font-size: 20px;
-
-    width: 70%;
-    height: 40px;
-    margin: 10px;
-
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 90px;
-}
-
-.Input-field-small {
-    background: #484848;
-    color: whitesmoke;
-    text-indent: 10px;
-    font-size: 20px;
-    width: 20%;
-    max-width: 65px;
-    height: 40px;
-    margin: 10px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 90px;
-}
-
 .Popup-search-icon {
     position: relative;
     width: 50px;
@@ -72,23 +45,13 @@
 }
 
 .Log-execution-button {
-    position: absolute;
-    width: 70%;
+    position: relative;
+    width: 20%;
     height: 50%;
-    right: -210px;
-    top: 36px;
     background: #FFF500;
     color: black;
     border-radius: 100px;
     font-weight: bold;
-}
-
-.Exercise-popup-inner {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 70%;
 }
 
 .Log-execution-button:hover {
@@ -96,11 +59,28 @@
     cursor: pointer;
 }
 
-.Execution {
+.Exercise-popup-inner {
     position: relative;
-    width: 95%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Log-input {
+    position: relative;
+    width: 100%;
     display: flex;
     flex-direction: row;
+    align-items: center;
+    margin-top: 20px;
+    margin-left: 5px;
+}
+
+.Execution {
+    position: relative;
+    width: 300%;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     margin-top: 20px;
     margin-left: 5px;
@@ -119,15 +99,23 @@
 
 .Execution-name {
     position: relative;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 100%;
-    line-height: 48px;
-    text-align: center;
+    width: 100%;
+    height: 60px;
+    flex-shrink: 0;
+    background-color: #FFF500;
+    border: 1px solid black;
+    filter: drop-shadow(-11px 15px 10px rgba(0, 0, 0, 0.25));
+    border-radius: 90px;
     margin-left: 10px;
-    white-space: nowrap;
-    overflow: visible;
-    text-overflow: ellipsis;
-    display: inline-block;
-    color: #FFFFFF;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: black;
+}
+
+.Execution-name:hover {
+    background: #cec70d;
+    cursor: pointer;
 }
