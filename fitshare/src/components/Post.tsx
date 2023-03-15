@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiThumbsUp } from "react-icons/fi";
 import { AiOutlineComment } from "react-icons/ai";
+import 'firebase/compat/storage';
+import firebase from "firebase/compat/app";
 
 interface ExerciseView {
   name?: string;
@@ -24,7 +26,7 @@ export function Post(props: {
   name: string,
   description: string,
   program: ProgramView,
-  image?: string,
+  image: string,
   likes: number,
   liked: boolean,
   comments: { person: string; content: string; }[],
