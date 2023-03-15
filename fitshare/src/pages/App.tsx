@@ -14,6 +14,7 @@ import { AiOutlineUserAdd } from 'react-icons/ai';
 import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 import { useDocumentData, useCollectionData } from "react-firebase-hooks/firestore";
 import { Feed } from "../components/Feed";
+import { AiOutlineFire } from 'react-icons/ai';
 
 
 interface UserProps {
@@ -85,6 +86,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
   const [friendsData, setFriendsData] = useState<any>(null);
   const [groupsData, setGroupsData] = useState<any>(null);
   const [membersData, setMembersData] = useState<any>(null);
+  const [userStreak, setUserStreak] = useState<number>(0);
 
   useEffect(() => {
     if (currentGroup) {
@@ -158,8 +160,17 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       } else {
         setGroupsData([]);
       }
+
+      // Find the streak of the user from firebase
+      findStreak()
     }
   }, [currentUserData]);
+
+  const findStreak = async () => {
+    const userDoc = await firebase.firestore().collection('users').doc(currentUser.uid).get();
+    const streakCount = userDoc.data()?.streakCount || 0;
+    setUserStreak(streakCount);
+  }
 
   return (
     <div className="App">
@@ -193,7 +204,6 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       {/* MIDDLE */}
       <div className="Middle">
         <div className="Top-bar">{currentPageName}</div>
-
         <div className="Post-button" onClick={handlePost}>
           Create Post
         </div>
@@ -203,6 +213,11 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
 
       {/* RIGHT SIDE */}
       <div className="Right-side-bar">
+        <div className="Streak-box">
+          <AiOutlineFire className="Streak-icon" />
+          <div className="StreakCount">{userStreak}</div>
+        </div>
+
         <div className="Programs-button" onClick={handlePrograms}>
           Programs
         </div>

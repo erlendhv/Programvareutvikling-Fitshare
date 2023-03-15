@@ -92,7 +92,31 @@ export function NewExecution(props: { currentUser: firebase.User }) {
             setLoggedExercises([...loggedExercises, selectedExercise]);
             saveWeight(selectedExercise);
         }
+        streakFunc(props.currentUser);
     };
+
+    const streakFunc = (async (user: firebase.User) => {
+        const today = new Date();
+        const userId = user.uid;
+
+        const executions = await firebase.firestore().collection('execution').where('owner', '==', userId).get();
+
+        let hasLoggedToday = false;
+        executions.forEach((executionDoc) => {
+            const execution = executionDoc.data();
+            const executionDate = execution.date.toDate();
+            if (executionDate.toDateString() === today.toDateString()) {
+                hasLoggedToday = true;
+            }
+        });
+
+        if (!hasLoggedToday) {
+            const userDoc = await firebase.firestore().collection('users').doc(userId).get();
+            const streakCount = userDoc.data()?.streakCount || 0;
+            const newStreakCount = streakCount + 1;
+            await firebase.firestore().collection('users').doc(userId).update({ streakCount: newStreakCount });
+        }
+    });
 
     const saveWeight = async (exercise: Exercise) => {
         const newExecution: Execution = {
