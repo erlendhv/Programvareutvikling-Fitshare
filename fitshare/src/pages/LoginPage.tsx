@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
@@ -48,7 +48,12 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  checkUserExists();
+  useEffect(() => {
+    if (user) {
+      checkUserExists();
+    }
+  }, [user]);
+  
   return (
     <div className="LoginPage">
       <section>{user ? <Main currentUser={user as firebase.User} /> : <SignIn />}</section>
