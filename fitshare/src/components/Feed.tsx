@@ -16,7 +16,7 @@ interface Post {
     likedBy: string[];
     owner: string;
     caption?: string;
-    image?: string;
+    image: string;
     comments: {
         person: string;
         content: string;
@@ -305,6 +305,7 @@ export function Feed(props: FeedInfo) {
             name: author?.displayName,
             description: postData?.description,
             program: newPostProgram,
+            image: postData?.image,
             likes: postData?.likedBy.length,
             liked: liked,
             comments: postData?.comments,
