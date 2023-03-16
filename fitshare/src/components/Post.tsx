@@ -26,7 +26,7 @@ export function Post(props: {
   name: string,
   description: string,
   program: ProgramView,
-  image: string,
+  image?: string,
   likes: number,
   liked: boolean,
   comments: { person: string; content: string; }[],
