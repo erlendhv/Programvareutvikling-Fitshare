@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
@@ -45,18 +45,53 @@ const LoginPage: React.FC = () => {
         posts: [],
         groups: [],
         interest: [],
-
+        streakCount: 0,
       };
       await currentUserDoc.set(userData);
+    } else {
+      // current user exists, check if they have logged today
+      onUserLogin(user as firebase.User);
     }
   };
 
-  checkUserExists();
+  useEffect(() => {
+    if (user) {
+      checkUserExists();
+    }
+  }, [user]);
 
-  
+
+  const onUserLogin = (async (user: firebase.User) => {
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+    const userId = user.uid;
+
+    const executions = await firebase.firestore().collection('execution').where('owner', '==', userId).get();
+
+    let hasLoggedToday = false;
+    let hasLoggedYesterday = false;
+    executions.forEach((executionDoc) => {
+      const execution = executionDoc.data();
+      const executionDate = execution.date.toDate();
+      if (executionDate.toDateString() === today.toDateString()) {
+        hasLoggedToday = true;
+      }
+      else if (executionDate.toDateString() === yesterday.toDateString()) {
+        hasLoggedYesterday = true;
+      }
+    });
+
+    if (!hasLoggedToday && !hasLoggedYesterday) {
+      await firebase.firestore().collection('users').doc(userId).update({ streakCount: 0 });
+    }
+  });
+
+
+
   return (
     <div className="LoginPage">
-      <section>{user ? (interest === 0 ? <Interest user={user as firebase.User} interest={interest} setInterest={setInterest}/> : <Main currentUser={user as firebase.User} />) : <SignIn />}</section>
+      <section>{user ? (interest === 0 ? <Interest user={user as firebase.User} interest={interest} setInterest={setInterest} /> : <Main currentUser={user as firebase.User} />) : <SignIn />}</section>
     </div>
   );
 };

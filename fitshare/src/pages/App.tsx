@@ -1,3 +1,4 @@
+import firebase from "firebase/compat/app";
 import { Post } from '../components/Post';
 import { Group } from '../components/Group';
 import { Friend } from '../components/Friend';
@@ -10,10 +11,11 @@ import FitShareLogo from './../FitShareLogo.png';
 import { useState, useEffect, Key } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { AiOutlineUserAdd } from 'react-icons/ai'
-import { AiOutlineUsergroupAdd } from 'react-icons/ai'
-import firebase from "firebase/compat/app"
+import { AiOutlineUserAdd } from 'react-icons/ai';
+import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 import { useDocumentData, useCollectionData } from "react-firebase-hooks/firestore";
+import { Feed } from "../components/Feed";
+import { AiOutlineFire } from 'react-icons/ai';
 
 
 interface UserProps {
@@ -25,6 +27,15 @@ interface GroupData {
   name: string;
   members: string[];
   admin: string;
+  posts: string[];
+}
+
+interface Friend {
+  id: string;
+  displayName: string;
+  programs: any[]; // You can replace "any" with the type definition for your program data
+  groups: any[]; // You can replace "any" with the type definition for your group data
+  posts: any[]; // You can replace "any" with the type definition for your post data
 }
 
 const App: React.FC<UserProps> = ({ currentUser }) => {
@@ -40,97 +51,31 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     navigate("/programs");
   };
 
-  const [currentGroup, setCurrentGroup] = useState("Group 1");
+  const handlePost = () => {
+    navigate("/newpost");
+  };
 
-  const [posts, setPosts] = useState([
-    {
-      id: uuidv4(),
-      name: "Gunnhild Pedersen",
-      program: [
-        {
-          workoutName: "Leg day",
-          exercises: [
-            { name: "Bench Press", sets: 3, reps: 10 },
-            { name: "Squat", sets: 3, reps: 10 },
-          ],
-        },
-        {
-          workoutName: "Workout 2",
-          exercises: [
-            { name: "Bench Press", sets: 3, reps: 10 },
-            { name: "Squat", sets: 3, reps: 10 },
-          ],
-        },
-      ],
-      image: ExercisePhoto,
-      likes: 0,
-      liked: false,
-      comments: [
-        { person: "Roger", content: "Thats crazy!" },
-        { person: "Roger", content: "No way!" },
-        {
-          person: "Kenneth",
-          content:
-            "That is the most crazy thing I have ever seen in my entire life! I really hope I can look just like you in the future! You are the person I dream of being in my sleep!",
-        },
-        { person: "Sen", content: "I want you!" },
-      ],
-    },
-    {
-      id: uuidv4(),
-      name: "Gunnhild Pedersen",
-      program: [
-        {
-          workoutName: "Pull",
-          exercises: [
-            { name: "Bench Press", sets: 3, reps: 10 },
-            { name: "Squat", sets: 3, reps: 10 },
-          ],
-        },
-        {
-          workoutName: "Workout 2",
-          exercises: [
-            { name: "Bench Press", sets: 3, reps: 10 },
-            { name: "Squat", sets: 3, reps: 10 },
-          ],
-        },
-      ],
-      image: "",
-      likes: 499,
-      liked: true,
-      comments: [],
-    },
-  ]);
+  const [currentGroup, setCurrentGroup] = useState<GroupData | null>(null);
 
-  function toggleLiked(id: string) {
-    const newPosts = [...posts];
-    const post = newPosts.find((post) => post.id === id);
+  const [membersOverhead, setMembersOverhead] = useState<string>("Friends");
+  const [AddFriendIcon, setAddFriendIcon] = useState<string>("Add-friend-icon");
 
-    if (post != null) {
-      post.liked = !post.liked;
-      if (post.liked) {
-        post.likes += 1;
-      } else {
-        post.likes -= 1;
-      }
-    }
-    setPosts(newPosts);
+  const [currentPageName, setCurrentPageName] = useState<string>("Homepage");
+  const [inGroupFeed, setInGroupFeed] = useState<boolean>(false);
+
+
+  const handleSetCurrentGroup = (group: GroupData) => {
+    setCurrentGroup(group);
+    setInGroupFeed(true);
+    setCurrentPageName(group.name);
   }
 
-  function addComment(id: string, comment: string) {
-    const newPosts = [...posts];
-
-    const post = newPosts.find((post) => post.id === id);
-
-    if (post && comment !== "") {
-      post.comments.push({
-        person: currentUser.displayName!,
-        content: comment,
-      });
-    }
-
-    setPosts(newPosts);
+  const goToHomePage = () => {
+    setCurrentGroup(null);
+    setInGroupFeed(false);
+    setCurrentPageName("Homepage")
   }
+
   // This is to get data about currentuser's friends
   // ref to current user in users collection firebase
   const currentUserRef = firebase
@@ -141,6 +86,34 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
 
   const [friendsData, setFriendsData] = useState<any>(null);
   const [groupsData, setGroupsData] = useState<any>(null);
+  const [membersData, setMembersData] = useState<any>(null);
+  const [userStreak, setUserStreak] = useState<number>(0);
+
+  useEffect(() => {
+    if (currentGroup) {
+      setMembersOverhead("Group members");
+      setAddFriendIcon("");
+      const membersRef = firebase
+        .firestore()
+        .collection("users")
+        .where(
+          firebase.firestore.FieldPath.documentId(),
+          "in",
+          currentGroup.members);
+
+      membersRef.onSnapshot((querySnapshot) => {
+        const members: any = [];
+        querySnapshot.forEach((doc) => {
+          members.push(doc.data());
+        });
+        setMembersData(members);
+      });
+    } else {
+      setCurrentPageName("Homepage");
+      setMembersOverhead("Friends")
+      setAddFriendIcon("Add-friend-icon")
+    }
+  }, [inGroupFeed, currentGroup]);
 
   useEffect(() => {
     let friendsUnsubscribe: firebase.Unsubscribe | undefined;
@@ -189,12 +162,16 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
         setGroupsData([]);
       }
 
-      return () => {
-        if (friendsUnsubscribe) friendsUnsubscribe();
-        if (groupsUnsubcribe) groupsUnsubcribe();
-      };
+      // Find the streak of the user from firebase
+      findStreak()
     }
   }, [currentUserData]);
+
+  const findStreak = async () => {
+    const userDoc = await firebase.firestore().collection('users').doc(currentUser.uid).get();
+    const streakCount = userDoc.data()?.streakCount || 0;
+    setUserStreak(streakCount);
+  }
 
   return (
     <div className="App">
@@ -204,6 +181,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           className="FitSharelogo"
           src={FitShareLogo}
           alt="FitShareLogo"
+          onClick={goToHomePage}
         ></img>
         <div className="Groups">
           <strong>Groups</strong>
@@ -214,61 +192,65 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
             }}
           />
           {groupsData
-            ? groupsData.map((group: any) => (
-              <Group key={group.id} name={group.name} />
-              ))
+            ? groupsData.map((group: GroupData) => (
+              <Group key={group.id} name={group.name}
+                onClick={() => handleSetCurrentGroup(group)}
+                selected={group.id === currentGroup?.id}
+              />
+            ))
             : null}
         </div>
       </div>
 
       {/* MIDDLE */}
       <div className="Middle">
-        <div className="Top-bar">{currentGroup}</div>
-
-        <div className="Post-buttons">
-          <div className="Post-button">Post Program</div>
-
-          <div className="Post-button">Post Image</div>
+        <div className="Top-bar">{currentPageName}</div>
+        <div className="Post-button" onClick={handlePost}>
+          Create Post
         </div>
-
-        <div className="Group-feed">
-          <RecommendedPost currentUser={currentUser as firebase.User}/>
-          {posts.map((post) => (
-            <Post
-              key={post.id}
-              id={post.id}
-              name={post.name}
-              program={post.program}
-              image={post.image}
-              likes={post.likes}
-              liked={post.liked}
-              comments={post.comments}
-              toggleLiked={toggleLiked}
-              addComment={addComment}
-            />
-          ))}
-        </div>
+        <RecommendedPost currentUser={currentUser as firebase.User} />
+        <Feed currentUser={currentUser} currentGroup={currentGroup} />
       </div>
 
       {/* RIGHT SIDE */}
       <div className="Right-side-bar">
+        <div className="Streak-box">
+          <AiOutlineFire className="Streak-icon" />
+          <div className="StreakCount">{userStreak}</div>
+        </div>
+
         <div className="Programs-button" onClick={handlePrograms}>
           Programs
         </div>
 
         <div className="Friends">
-          <strong>Friends</strong>
-          <AiOutlineUserAdd
-            className="Add-friend-icon"
-            onClick={() => {
-              setIsShowingFriendPopUp(true);
-            }}
-          />
-          {friendsData
-            ? friendsData.map((friend: any) => (
-              <Friend key={friend.id} name={friend.displayName} />
-              ))
-            : null}
+          <strong>{membersOverhead}</strong>
+          {
+            // Render add friend icon if not in group feed
+            !inGroupFeed &&
+            <AiOutlineUserAdd
+              className="Add-friend-icon"
+              onClick={() => {
+                setIsShowingFriendPopUp(true);
+              }}
+            />}
+
+          {
+            inGroupFeed ?
+              membersData
+                ? membersData.map((member: any) => (
+                  <Friend key={member.id} name={member.displayName} />
+                )
+                )
+                : null
+              :
+
+              friendsData
+                ? friendsData.map((friend: any) => (
+                  <Friend key={friend.id} name={friend.displayName} />
+                ))
+                : null
+          }
         </div>
       </div>
 
@@ -284,6 +266,10 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           groupsData={groupsData}
         />
       ) : null}
+
+      <div>
+        {currentPageName}
+      </div>
     </div>
   );
 };
