@@ -3,6 +3,7 @@ import firebase from 'firebase/compat/app';
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import { useAuthState } from 'react-firebase-hooks/auth';
+import "./../style/Interest.css";
 
 interface User {
   uid: string;
@@ -10,25 +11,24 @@ interface User {
 
 interface Props {
   user: User;
-  interest : number;
+  interest: number;
   setInterest: (interest: number) => void;
 }
 
 const Interest = (props: Props) => {
- // const [interest, setInterest] = useState(0);
-  const UpdateDatabase = (number: number) => {
+  // const [interest, setInterest] = useState(0);
+  const StoreInterest = (interestNumber: number) => {
     const usersCollection = firebase.firestore().collection("users");
     const currentUserDoc = usersCollection.doc(props.user!.uid);
-    currentUserDoc.update({ interest: number });
-    props.setInterest(number);
+    currentUserDoc.update({ interest: interestNumber });
+    props.setInterest(interestNumber);
   }
-  return (<div>
-    <h1>Interest</h1>
-    <p>What are you interested in?</p>
-    <button onClick={() => {UpdateDatabase(1)}}>Weight Loss</button>
-    <button onClick={() => {UpdateDatabase(2)}}>Strength</button>
-    <button onClick={() => {UpdateDatabase(3)}}>Endurance</button>
-    </div>)
+  return (<div className="Interest-container">
+    <h1 className="Interest-header">What are you interested in?</h1>
+    <button className="Interest-button" onClick={() => { StoreInterest(1) }}>Weight Loss</button>
+    <button className="Interest-button" onClick={() => { StoreInterest(2) }}>Strength</button>
+    <button className="Interest-button" onClick={() => { StoreInterest(3) }}>Endurance</button>
+  </div>)
 }
 
 export default Interest;
