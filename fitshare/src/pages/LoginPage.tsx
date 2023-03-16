@@ -35,6 +35,9 @@ const LoginPage: React.FC = () => {
     const currentUserDoc = usersCollection.doc(user!.uid);
     const currentUserSnapshot = await currentUserDoc.get();
 
+    const currentUserInterest = currentUserSnapshot.data()?.interest || 0;
+    setInterest(currentUserInterest);
+
     if (!currentUserSnapshot.exists) {
       // current user does not exist, create a new user document
       const userData = {
