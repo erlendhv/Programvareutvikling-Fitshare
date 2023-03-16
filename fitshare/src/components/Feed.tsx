@@ -103,6 +103,16 @@ export function Feed(props: FeedInfo) {
             comments: post?.comments,
         });
     }
+
+    function deletePost(id: string) {
+        const newPosts = posts.filter((post) => post.id !== id);
+        setPosts(newPosts);
+
+        // Delete post from database
+        const postRef = firebase.firestore().collection("posts").doc(id);
+        postRef.delete();
+    }
+
     const currentUserRef = firebase
         .firestore()
         .collection("users")
@@ -335,9 +345,11 @@ export function Feed(props: FeedInfo) {
                     image={post.image}
                     likes={post.likes}
                     liked={post.liked}
+                    isAdmin={props.currentGroup?.admin === props.currentUser.uid}
                     comments={post.comments}
                     toggleLiked={toggleLiked}
                     addComment={addComment}
+                    deletePost = {deletePost}
                 />
             ))}
     </div>;
