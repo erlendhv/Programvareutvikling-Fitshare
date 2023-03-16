@@ -107,12 +107,19 @@ export function Feed(props: FeedInfo) {
     function deletePost(id: string) {
         const newPosts = posts.filter((post) => post.id !== id);
         setPosts(newPosts);
-
-        // Delete post from database
+      
+        // Delete post from the posts collection in Firestore
         const postRef = firebase.firestore().collection("posts").doc(id);
         postRef.delete();
-    }
-
+      
+        // Delete post from the currentGroup
+        if (props.currentGroup) {
+          const groupRef = firebase.firestore().collection("groups").doc(props.currentGroup.id);
+          groupRef.update({
+            posts: firebase.firestore.FieldValue.arrayRemove(id)
+          });
+        }
+      }
     const currentUserRef = firebase
         .firestore()
         .collection("users")
