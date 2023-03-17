@@ -140,7 +140,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       setMembersOverhead("Friends")
       setAddFriendIcon("Add-friend-icon")
     }
-  }, [inGroupFeed, currentGroup,membersData]);
+  }, [inGroupFeed, currentGroup,membersData,groupsData]);
 
   useEffect(() => {
     let friendsUnsubscribe: firebase.Unsubscribe | undefined;
@@ -192,7 +192,8 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       // Find the streak of the user from firebase
       findStreak()
     }
-  }, [currentUserData,groupsData]);
+    console.log("Hey")
+  }, [currentUserData]);
 
   const findStreak = async () => {
     const userDoc = await firebase.firestore().collection('users').doc(currentUser.uid).get();
