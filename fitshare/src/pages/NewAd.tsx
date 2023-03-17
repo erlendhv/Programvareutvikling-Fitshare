@@ -60,7 +60,7 @@ const NewAd = (props: { currentAdvertiserId: string }) => {
                 <div className="Overview">
                     <AdPostPreview
                         id={uuidv4()}
-                        name={businessName}
+                        name={"Ad: " + businessName}
                         setDescription={setDescription}
                         handleImage={handleImage}
                         image={url}
