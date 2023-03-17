@@ -4,6 +4,7 @@ import './../style/App.css';
 import './../style/NewProgram.css';
 import { useState, useEffect } from 'react';
 import { useDocumentData } from "react-firebase-hooks/firestore";
+import { NonInteractablePost } from "./NonInteractablePost";
 
 interface Post {
     id: string;
@@ -21,6 +22,14 @@ interface Post {
         person: string;
         content: string;
     }[];
+}
+
+interface Ad {
+    id: string,
+    name: string,
+    description: string,
+    image: string
+    timeStamp: firebase.firestore.Timestamp;
 }
 
 interface ExerciseView {
@@ -55,6 +64,8 @@ interface GroupData {
 
 export function Feed(props: FeedInfo) {
     const [posts, setPosts] = useState<Post[]>([]);
+
+    const [ads, setAds] = useState<Ad[]>([]);
 
     const uniquePostIds = new Set<string>();
 
@@ -319,9 +330,50 @@ export function Feed(props: FeedInfo) {
         uniquePostIds.add(postData?.id);
     }
 
+    useEffect(() => {
+        const adRef = firebase
+            .firestore()
+            .collection("ads")
+
+        adRef.onSnapshot((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                const ad = doc.data();
+                if (!uniquePostIds.has(ad.id)) {
+                    addAd(ad);
+                }
+            });
+        });
+    }, []);
+
+    function addAd(adData?: firebase.firestore.DocumentData) {
+        const newAd: Ad = {
+            id: adData?.id,
+            name: adData?.owner,
+            description: adData?.description,
+            image: adData?.image,
+            timeStamp: adData?.timeStamp,
+        };
+
+        setAds((ads) => [...ads, newAd]);
+
+        uniquePostIds.add(adData?.id);
+    }
+
 
     return <div className="Group-feed">
 
+        {
+            ads.sort((a, b) => {
+                return b.timeStamp.toMillis() - a.timeStamp.toMillis();
+            }).map((ad, key) => (
+                <NonInteractablePost
+                    key={key} // TODO: Change to post.id (error occurs when post.id is used)
+                    id={ad.id}
+                    name={ad.name}
+                    description={ad.description}
+                    image={ad.image}
+                />
+            ))}
         {
             posts.sort((a, b) => {
                 return b.timeStamp.toMillis() - a.timeStamp.toMillis();

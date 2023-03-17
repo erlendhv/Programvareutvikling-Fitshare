@@ -214,6 +214,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
           Create Post
         </div>
         <RecommendedPost currentUser={currentUser as firebase.User} />
+        
         <Feed currentUser={currentUser} currentGroup={currentGroup} />
       </div>
 

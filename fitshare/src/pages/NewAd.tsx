@@ -8,9 +8,6 @@ interface AdPost {
     owner: string;
     id: string,
     description: string
-    comments: [];
-    likedBy: [];
-    likes: number;
     image: string;
     timeStamp: firebase.firestore.Timestamp;
 }
@@ -22,16 +19,14 @@ const NewAd = (props: { currentAdvertiserId: string }) => {
 
     const [businessName, setBusinessName] = useState<string>("");
 
-    const advertiserRef = firebase.firestore().collection("advertiser").doc(props.currentAdvertiserId);
     useEffect(() => {
+        const advertiserRef = firebase.firestore().collection("advertiser").doc(props.currentAdvertiserId);
         advertiserRef.get().then((doc) => {
             if (doc.exists) {
                 setBusinessName(doc.data()?.businessName);
             }
         });
-        console.log(advertiserRef);
-        console.log(businessName);
-    }, [advertiserRef]);
+    }, []);
 
     async function handleImage(file: File) {
         const path = `/images/${file?.name}`;
@@ -47,9 +42,6 @@ const NewAd = (props: { currentAdvertiserId: string }) => {
             owner: businessName,
             id: uuidv4(),
             description: description,
-            comments: [],
-            likedBy: [],
-            likes: 0,
             image: url,
             timeStamp: firebase.firestore.Timestamp.now()
         };
@@ -57,6 +49,7 @@ const NewAd = (props: { currentAdvertiserId: string }) => {
         const programCollection = firebase.firestore().collection("ads");
         programCollection.doc(newPost.id).set(newPost);
     };
+
     const handleSignOut = () => {
         window.location.reload();
     };
