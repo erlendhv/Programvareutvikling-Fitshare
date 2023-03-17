@@ -356,7 +356,7 @@ export function Feed(props: FeedInfo) {
             setChosenAd(newAds[Math.floor(Math.random() * newAds.length)]);
         });
 
-    }, []);
+    }, [props.currentGroup]);
 
 
     return <div className="Group-feed">
