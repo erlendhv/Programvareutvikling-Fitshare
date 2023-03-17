@@ -401,7 +401,7 @@
 
 .Streak-box {
   position: relative;
-  width: 100px;
+  width: 90%;
   height: 60px;
   right: 0px;
   top: 20px;
@@ -409,12 +409,12 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .StreakCount {
   /* position: relative; */
-  font-size: 40px;
+  font-size: 35px;
   /* display: flex; */
   /* flex-direction: column; */
   /* align-items: center; */
@@ -432,4 +432,30 @@
   /* align-items: center; */
   /* justify-content: center; */
   color: orangered;
+}
+
+.Sign-out-button {
+  position: relative;
+  color: black;
+  line-height: 15px;
+  width: 80px;
+  min-width: 70px;
+  height: 30px;
+  margin-left: 10%;
+
+  font-weight: bold;
+
+  background: #fff500;
+  border-radius: 20px;
+
+  filter: drop-shadow(-10px 10px 10px rgba(0, 0, 0, 0.25));
+}
+
+.Sign-out-button:hover {
+  background: #cec70d;
+  cursor: pointer;
+}
+
+.Sign-out-button:active {
+  background: #b3a900;
 }

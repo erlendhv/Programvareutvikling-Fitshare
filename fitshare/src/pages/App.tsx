@@ -172,6 +172,11 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     setUserStreak(streakCount);
   }
 
+  const handleSignOut = () => {
+    firebase.auth().signOut();
+    navigate("/");
+  };
+
   return (
     <div className="App">
       {/* LEFT SIDE */}
@@ -216,6 +221,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
         <div className="Streak-box">
           <AiOutlineFire className="Streak-icon" />
           <div className="StreakCount">{userStreak}</div>
+          <button className="Sign-out-button" onClick={handleSignOut}>Sign out</button>
         </div>
 
         <div className="Programs-button" onClick={handlePrograms}>
