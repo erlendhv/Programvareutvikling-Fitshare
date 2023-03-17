@@ -70,6 +70,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
   }
 
   const handleRemoveMember = (member: string) => {
+    console.log("Removing member")
     if (currentGroup) {
       const members = currentGroup.members;
       const index = members.indexOf(member);
@@ -95,17 +96,6 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
     
   }
 
-  const handleRemoveCurrentGroupFromMember = (member: string) => {
-    if (currentGroup) {
-      const groupRef = firebase
-        .firestore()
-        .collection("users")
-        .doc(member);
-      groupRef.update({
-        groups: firebase.firestore.FieldValue.arrayRemove(currentGroup.id),
-      });
-    }
-  }
 
   const goToHomePage = () => {
     setCurrentGroup(null);
@@ -150,7 +140,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       setMembersOverhead("Friends")
       setAddFriendIcon("Add-friend-icon")
     }
-  }, [inGroupFeed, currentGroup, currentGroup?.members]);
+  }, [inGroupFeed, currentGroup,membersData]);
 
   useEffect(() => {
     let friendsUnsubscribe: firebase.Unsubscribe | undefined;
@@ -202,7 +192,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       // Find the streak of the user from firebase
       findStreak()
     }
-  }, [currentUserData]);
+  }, [currentUserData,groupsData]);
 
   const findStreak = async () => {
     const userDoc = await firebase.firestore().collection('users').doc(currentUser.uid).get();
