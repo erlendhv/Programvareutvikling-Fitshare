@@ -8,6 +8,7 @@ import "firebase/compat/analytics";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import Main from "../Main";
+import Interest from "./Interest";
 import "../style/LoginPage.css";
 import { Group } from "../components/Group";
 import NewPost from "./NewPost";
@@ -30,6 +31,7 @@ const analytics: firebase.analytics.Analytics = firebase.analytics();
 
 const LoginPage: React.FC = () => {
   const [user] = useAuthState(auth as any);
+  const [interest, setInterest] = useState(0);
 
   const [isAdvertiser, setIsAdvertiser] = useState(false);
 
@@ -38,6 +40,9 @@ const LoginPage: React.FC = () => {
     const usersCollection = firestore.collection("users");
     const currentUserDoc = usersCollection.doc(user!.uid);
     const currentUserSnapshot = await currentUserDoc.get();
+
+    const currentUserInterest = currentUserSnapshot.data()?.interest || 0;
+    setInterest(currentUserInterest);
 
     if (!currentUserSnapshot.exists) {
       // current user does not exist, create a new user document
@@ -48,6 +53,7 @@ const LoginPage: React.FC = () => {
         programs: [],
         posts: [],
         groups: [],
+        interest: [],
         streakCount: 0,
       };
       await currentUserDoc.set(userData);
@@ -94,8 +100,8 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="LoginPage">
-      <section>{isAdvertiser ? <AdLoginPage /> : user ?
-        <Main currentUser={user as firebase.User} />
+      <section>{isAdvertiser ? <AdLoginPage handleBack={() => setIsAdvertiser(false)} /> : user ?
+        (interest === 0 ? <Interest user={user as firebase.User} interest={interest} setInterest={setInterest} /> : <Main currentUser={user as firebase.User} />)
         : <SignIn setIsAdvertiser={setIsAdvertiser} />}</section>
     </div>
   );
