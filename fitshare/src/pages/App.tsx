@@ -3,6 +3,7 @@ import { Post } from '../components/Post';
 import { Group } from '../components/Group';
 import { Friend } from '../components/Friend';
 import { Popup } from '../components/Popup';
+import { RecommendedPost } from '../components/RecommendedPost';
 import './../style/App.css';
 import './../style/NewProgram.css';
 import ExercisePhoto from './../ExercisePhoto.jpeg';
@@ -207,8 +208,8 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
         <div className="Post-button" onClick={handlePost}>
           Create Post
         </div>
-
-        <Feed currentUser={currentUser} currentGroup={currentGroup}  />
+        <RecommendedPost currentUser={currentUser as firebase.User} />
+        <Feed currentUser={currentUser} currentGroup={currentGroup} />
       </div>
 
       {/* RIGHT SIDE */}
