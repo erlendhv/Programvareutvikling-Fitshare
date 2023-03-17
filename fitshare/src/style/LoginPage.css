@@ -43,3 +43,60 @@ body {
   background: #cec70d;
   cursor: pointer;
 }
+
+.Sign-in-button:active {
+  background: #b3a900;
+}
+
+.Advertiser-sign-in-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: black;
+  font-size: 12px;
+  line-height: 15px;
+  width: 10%;
+  height: 40px;
+  font-weight: bold;
+  min-width: 130px;
+  background: #fff500;
+  border-radius: 100px;
+  filter: drop-shadow(-10px 10px 10px rgba(0, 0, 0, 0.25));
+}
+
+.Advertiser-sign-in-button:hover {
+  background: #cec70d;
+  cursor: pointer;
+}
+
+.Sign-in-text {
+  color: white;
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.Sign-up-button {
+  position: relative;
+  color: black;
+  font-size: 15px;
+  line-height: 15px;
+  width: 17%;
+  height: 40px;
+  font-weight: bold;
+  min-width: 130px;
+  background: #fff500;
+  border-radius: 100px;
+  filter: drop-shadow(-10px 10px 10px rgba(0, 0, 0, 0.25));
+  /* Center the button horizontally */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Sign-up-button:hover {
+  background: #cec70d;
+  cursor: pointer;
+}
+
+.Sign-up-button:active {
+  background: #b3a900;
+}

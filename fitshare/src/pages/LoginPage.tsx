@@ -9,6 +9,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import Main from "../Main";
 import "../style/LoginPage.css";
+import { Group } from "../components/Group";
+import NewPost from "./NewPost";
+import NewAd from "./NewAd";
+import AdLoginPage from "./AdLoginPage";
 
 firebase.initializeApp({
   apiKey: "AIzaSyB1JcAfuFsMNrv1TGzf0-7axx_rQVASozI",
@@ -26,6 +30,8 @@ const analytics: firebase.analytics.Analytics = firebase.analytics();
 
 const LoginPage: React.FC = () => {
   const [user] = useAuthState(auth as any);
+
+  const [isAdvertiser, setIsAdvertiser] = useState(false);
 
   // check if the current user exists in Firestore
   const checkUserExists = async () => {
@@ -88,20 +94,26 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="LoginPage">
-      <section>{user ? <Main currentUser={user as firebase.User} /> : <SignIn />}</section>
+      <section>{isAdvertiser ? <AdLoginPage /> : user ?
+        <Main currentUser={user as firebase.User} />
+        : <SignIn setIsAdvertiser={setIsAdvertiser} />}</section>
     </div>
   );
 };
 
-function SignIn() {
+function SignIn(props: { setIsAdvertiser: (isAdvertiser: boolean) => void }) {
   const signInWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider);
+  };
+  const goToAdvertiserPage = () => {
+    props.setIsAdvertiser(true);
   };
   return (
     <div className="sign-in">
       <h1 className="header">FitShare</h1>
       <button className="Sign-in-button" onClick={signInWithGoogle}> Sign in with Google</button>
+      <button className="Advertiser-sign-in-button" onClick={goToAdvertiserPage}>Sign in as advertiser</button>
     </div>
   );
 }
