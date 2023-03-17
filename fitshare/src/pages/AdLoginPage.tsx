@@ -5,8 +5,10 @@ import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import "firebase/compat/analytics";
 import "../style/LoginPage.css";
+import './../style/App.css';
 import NewAd from "./NewAd";
 import { v4 as uuidv4 } from 'uuid';
+import { BiArrowBack } from 'react-icons/bi';
 
 firebase.initializeApp({
     apiKey: "AIzaSyB1JcAfuFsMNrv1TGzf0-7axx_rQVASozI",
@@ -18,7 +20,7 @@ firebase.initializeApp({
     measurementId: "G-L40G2SPHC7",
 });
 
-const AdLoginPage: React.FC = () => {
+const AdLoginPage = (props: { handleBack: () => void }) => {
 
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
@@ -71,6 +73,7 @@ const AdLoginPage: React.FC = () => {
     return (
         hasLoggedIn ? <NewAd currentAdvertiserId={currentAdvertiserId} /> :
             <div className="sign-in">
+                <BiArrowBack className="Back-button" onClick={props.handleBack} />
                 <h1 className="header">FitShare</h1>
                 <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} placeholder="Username" className="Input-field" />
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="Input-field" />
