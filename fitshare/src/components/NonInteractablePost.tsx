@@ -4,10 +4,12 @@ export function NonInteractablePost(props: {
     name: string,
     description: string,
     program?: { workoutName: string; exercises: { name: string; sets: number; reps: number }[] }[],
-    image: string
+    image: string,
+    isAd: boolean
 }) {
     return (
-        <div className="Post">
+        <div className="Post"
+            style={props.isAd ? { backgroundColor: "#b3ad00" } : {}}>
             <strong>{props.name}</strong>
             <br></br>
             <div className="Post-content">

@@ -9,7 +9,6 @@ interface AdPost {
     id: string,
     description: string
     image: string;
-    timeStamp: firebase.firestore.Timestamp;
 }
 
 const NewAd = (props: { currentAdvertiserId: string }) => {
@@ -43,7 +42,6 @@ const NewAd = (props: { currentAdvertiserId: string }) => {
             id: uuidv4(),
             description: description,
             image: url,
-            timeStamp: firebase.firestore.Timestamp.now()
         };
 
         const programCollection = firebase.firestore().collection("ads");

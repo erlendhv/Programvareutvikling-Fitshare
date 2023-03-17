@@ -75,6 +75,7 @@ export function RecommendedPost(props: UserProps) {
         ]
       }]}
       image={"https://firebasestorage.googleapis.com/v0/b/fitshare-7b3ca.appspot.com/o/images%2Fweight_loss.jpg?alt=media&token=1e8c6983-4182-4250-8e85-8ef32ead0f62"}
+      isAd={false}
     />)
   } else if (interest === 2) {
     return (<NonInteractablePost
@@ -125,6 +126,7 @@ export function RecommendedPost(props: UserProps) {
         ],
       }]}
       image={"https://firebasestorage.googleapis.com/v0/b/fitshare-7b3ca.appspot.com/o/images%2FRipped%20Guy.webp?alt=media&token=41327429-4dbc-4303-b70c-10ee8c8b57c8"}
+      isAd={false}
     />)
   } else if (interest === 3) {
     return (<NonInteractablePost
@@ -156,6 +158,7 @@ export function RecommendedPost(props: UserProps) {
       }
       ]}
       image={"https://firebasestorage.googleapis.com/v0/b/fitshare-7b3ca.appspot.com/o/images%2Fendurance.jpg?alt=media&token=0c57bf30-8e98-459d-9e26-667ecda3e604"}
+      isAd={false}
     />)
   }
   return (<div></div>)
