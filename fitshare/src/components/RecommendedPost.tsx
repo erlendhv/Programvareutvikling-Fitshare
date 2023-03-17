@@ -4,11 +4,15 @@ import { useState, useEffect } from 'react';
 
 
 interface UserProps {
+  inGroupFeed: boolean;
   currentUser: firebase.User;
 }
 
 export function RecommendedPost(props: UserProps) {
+  
   const [interest, setInterest] = useState(0);
+  
+  const [value,setvalue] = useState<boolean>(true); 
 
   useEffect(() => {
     const usersCollection = firebase.firestore().collection("users");
@@ -26,7 +30,9 @@ export function RecommendedPost(props: UserProps) {
   }, []);
 
 
-
+  if (props.inGroupFeed) { 
+    return null
+  }
   if (interest === 1) {
     return (<NonInteractablePost
       key={1}
