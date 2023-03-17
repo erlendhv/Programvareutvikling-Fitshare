@@ -433,3 +433,17 @@
   /* justify-content: center; */
   color: orangered;
 }
+.members-wrapper{
+  display: flex;
+  align: center;
+}
+
+.Remove-member{
+  margin-left: 5px;
+  margin-top: 10%;
+}
+
+.Remove-member:hover{
+  color: yellow;
+}
+
