@@ -433,17 +433,32 @@
   /* justify-content: center; */
   color: orangered;
 }
-.members-wrapper{
+.members-wrapper {
   display: flex;
-  align: center;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row-reverse;
 }
 
-.Remove-member{
-  margin-left: 5px;
-  margin-top: 10%;
+
+.Remove-member {
+  align-items: right;
+  margin-left: 20px;
 }
+
 
 .Remove-member:hover{
   color: yellow;
+  cursor: pointer;
+}
+
+.Member-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: left ;
+}
+
+.Member-name {
+  margin-right: auto;
 }
 
