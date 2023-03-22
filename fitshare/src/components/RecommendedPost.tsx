@@ -9,10 +9,8 @@ interface UserProps {
 }
 
 export function RecommendedPost(props: UserProps) {
-  
+
   const [interest, setInterest] = useState(0);
-  
-  const [value,setvalue] = useState<boolean>(true); 
 
   useEffect(() => {
     const usersCollection = firebase.firestore().collection("users");
@@ -30,7 +28,7 @@ export function RecommendedPost(props: UserProps) {
   }, []);
 
 
-  if (props.inGroupFeed) { 
+  if (props.inGroupFeed) {
     return null
   }
   if (interest === 1) {
