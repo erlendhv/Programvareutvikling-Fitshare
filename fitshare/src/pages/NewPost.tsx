@@ -69,6 +69,10 @@ export function NewPost(props: { currentUser: firebase.User }) {
 
   const navigate = useNavigate();
 
+  const handleBack = () => {
+    navigate('/');
+  };
+
   const publishPost = async () => {
 
     var programString = "";
@@ -287,6 +291,8 @@ export function NewPost(props: { currentUser: firebase.User }) {
 
   return (
     <div className="New-Post">
+      <BiArrowBack className="Back-button" onClick={handleBack} />
+
       <h1>Select program to post</h1>
       <div className="Overviews">
         <div className="Overview">
