@@ -113,7 +113,7 @@ export function Popup(props: { removePopup: any, isShowingFriends: boolean, curr
             groups: firebase.firestore.FieldValue.arrayUnion(groupId)
         });
 
-        // Add user to groupu
+        // Add user to group
         const groupRef = firebase.firestore().collection("groups").doc(groupId);
         groupRef.update({
             members: firebase.firestore.FieldValue.arrayUnion(props.currentUser.uid)

@@ -193,7 +193,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       // Find the streak of the user from firebase
       findStreak()
     }
-    console.log("Hey")
+  
   }, [currentUserData]);
 
   const findStreak = async () => {
