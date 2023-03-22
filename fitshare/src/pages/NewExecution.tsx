@@ -89,10 +89,8 @@ export function NewExecution(props: { currentUser: firebase.User }) {
 
     const handleAddExecution = () => {
         if (weight !== "") {
-            setLoggedExercises([...loggedExercises, selectedExercise]);
-            saveWeight(selectedExercise);
+            streakFunc(props.currentUser);
         }
-        streakFunc(props.currentUser);
     };
 
     const streakFunc = (async (user: firebase.User) => {
@@ -116,6 +114,8 @@ export function NewExecution(props: { currentUser: firebase.User }) {
             const newStreakCount = streakCount + 1;
             await firebase.firestore().collection('users').doc(userId).update({ streakCount: newStreakCount });
         }
+        setLoggedExercises([...loggedExercises, selectedExercise]);
+        saveWeight(selectedExercise);
     });
 
     const saveWeight = async (exercise: Exercise) => {

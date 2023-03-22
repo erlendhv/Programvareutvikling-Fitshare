@@ -51,14 +51,6 @@ export function TrainingPrograms(props: { currentUser: firebase.User }) {
     },
   ]);
 
-  const [workouts, setWorkouts] = useState<Workout[]>([
-    {
-      id: "0",
-      name: "Your workouts",
-      exercises: []
-    },
-  ]);
-
   const [exercises, setExercises] = useState<Exercise[]>([
     {
       id: "0",
@@ -95,26 +87,6 @@ export function TrainingPrograms(props: { currentUser: firebase.User }) {
     }
   }, [currentUserData]);
 
-  // useEffect(() => {
-  //   console.log("useEffect");
-  //   console.log(currentProgram);
-  //   const matchingWorkouts: Workout[] = [];
-  //   currentProgram.workouts.forEach(async (workoutId) => {
-  //     const workoutCollection = firebase.firestore().collection("workout");
-  //     const querySnapshot = await workoutCollection.where('id', '==', workoutId).get();
-  //     querySnapshot.forEach((doc) => {
-  //       const workout = doc.data() as Workout;
-  //       matchingWorkouts.push(workout);
-  //       // workouts.push(workout);
-  //     });
-  //   }
-  //   );
-  //   // setWorkouts(workouts);
-  //   setWorkouts(matchingWorkouts);
-  //   console.log(workouts);
-  // }, [currentProgram]);
-
-
   return (
     <div className="NewProgram">
       <BiArrowBack className="Back-button" onClick={handleBack} />
@@ -137,14 +109,6 @@ export function TrainingPrograms(props: { currentUser: firebase.User }) {
         <div className="Overview">
           <h2>Executions</h2>
           <div className="Create-new-button" onClick={addExecution}>Add new Execution</div>
-          {workouts.map((workoutBut, key) => (
-            <>
-              <div key={workoutBut.id} className="Option" >
-                {workoutBut.name}
-              </div>
-            </>
-          ))}
-
         </div>
 
       </div >
