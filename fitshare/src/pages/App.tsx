@@ -208,7 +208,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
         <div className="Post-button" onClick={handlePost}>
           Create Post
         </div>
-        <RecommendedPost currentUser={currentUser as firebase.User} />
+        <RecommendedPost currentUser={currentUser as firebase.User} inGroupFeed={inGroupFeed} />
         <Feed currentUser={currentUser} currentGroup={currentGroup} />
       </div>
 
@@ -271,6 +271,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
         {currentPageName}
       </div>
     </div>
+    
   );
 };
 
