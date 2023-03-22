@@ -18,6 +18,8 @@ const NewAd = (props: { currentAdvertiserId: string }) => {
 
     const [businessName, setBusinessName] = useState<string>("");
 
+    const [postedFeedback, setPostedFeedback] = useState<boolean>(false);
+
     useEffect(() => {
         const advertiserRef = firebase.firestore().collection("advertiser").doc(props.currentAdvertiserId);
         advertiserRef.get().then((doc) => {
@@ -46,6 +48,9 @@ const NewAd = (props: { currentAdvertiserId: string }) => {
 
         const programCollection = firebase.firestore().collection("ads");
         programCollection.doc(newPost.id).set(newPost);
+
+        setURL("");
+        setPostedFeedback(true);
     };
 
     const handleSignOut = () => {
@@ -68,6 +73,7 @@ const NewAd = (props: { currentAdvertiserId: string }) => {
                 </div>
             </div>
             <div className="New-post-button" onClick={publishPost}>Post</div>
+            {postedFeedback ? <div className="Feedback">Your post has been posted!</div> : null}
         </div>
     );
 }
