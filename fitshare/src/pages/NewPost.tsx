@@ -96,8 +96,6 @@ export function NewPost(props: { currentUser: firebase.User }) {
       }
     });
 
-    setFile(undefined);
-
     const newPost: Post = {
       owner: props.currentUser.uid,
       id: uuidv4(),
@@ -131,11 +129,9 @@ export function NewPost(props: { currentUser: firebase.User }) {
     navigate('/');
   };
 
-  const [file, setFile] = useState<File>();
   const [url, setURL] = useState("");
 
   async function handleImage(file: File) {
-    setFile(file);
     const path = `/images/${file?.name}`;
     const ref = firebase.storage().ref(path);
     await ref.put(file as File);

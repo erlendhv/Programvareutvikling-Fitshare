@@ -4,6 +4,7 @@ import './../style/App.css';
 import './../style/NewProgram.css';
 import { useState, useEffect } from 'react';
 import { useDocumentData } from "react-firebase-hooks/firestore";
+import { NonInteractablePost } from "./NonInteractablePost";
 
 interface Post {
     id: string;
@@ -21,6 +22,13 @@ interface Post {
         person: string;
         content: string;
     }[];
+}
+
+interface Ad {
+    id: string,
+    name: string,
+    description: string,
+    image: string
 }
 
 interface ExerciseView {
@@ -55,6 +63,8 @@ interface GroupData {
 
 export function Feed(props: FeedInfo) {
     const [posts, setPosts] = useState<Post[]>([]);
+
+    const [chosenAd, setChosenAd] = useState<Ad | null>(null);
 
     const uniquePostIds = new Set<string>();
 
@@ -336,9 +346,48 @@ export function Feed(props: FeedInfo) {
         uniquePostIds.add(postData?.id);
     }
 
+    useEffect(() => {
+        const adRef = firebase
+            .firestore()
+            .collection("ads")
+
+        adRef.onSnapshot((querySnapshot) => {
+
+            const newAds: Ad[] = [];
+
+            querySnapshot.forEach((doc) => {
+                const ad = doc.data();
+
+                const newAd: Ad = {
+                    id: ad?.id,
+                    name: "Ad: " + ad?.owner,
+                    description: ad?.description,
+                    image: ad?.image,
+                };
+
+                newAds.push(newAd);
+
+                uniquePostIds.add(ad?.id);
+            });
+
+            setChosenAd(newAds[Math.floor(Math.random() * newAds.length)]);
+        });
+
+    }, [props.currentGroup]);
+
 
     return <div className="Group-feed">
 
+        {
+            chosenAd &&
+            <NonInteractablePost
+                id={chosenAd.id}
+                name={chosenAd.name}
+                description={chosenAd.description}
+                image={chosenAd.image}
+                isAd={true}
+            />
+        }
         {
             posts.sort((a, b) => {
                 return b.timeStamp.toMillis() - a.timeStamp.toMillis();

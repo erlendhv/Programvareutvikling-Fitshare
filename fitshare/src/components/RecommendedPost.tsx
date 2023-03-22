@@ -1,6 +1,7 @@
 import React from 'react';
 import firebase from "firebase/compat/app";
 import { useState, useEffect } from 'react';
+import { NonInteractablePost } from './NonInteractablePost';
 
 
 interface UserProps {
@@ -78,6 +79,7 @@ export function RecommendedPost(props: UserProps) {
         ]
       }]}
       image={"https://firebasestorage.googleapis.com/v0/b/fitshare-7b3ca.appspot.com/o/images%2Fweight_loss.jpg?alt=media&token=1e8c6983-4182-4250-8e85-8ef32ead0f62"}
+      isAd={false}
     />)
   } else if (interest === 2) {
     return (<NonInteractablePost
@@ -128,6 +130,7 @@ export function RecommendedPost(props: UserProps) {
         ],
       }]}
       image={"https://firebasestorage.googleapis.com/v0/b/fitshare-7b3ca.appspot.com/o/images%2FRipped%20Guy.webp?alt=media&token=41327429-4dbc-4303-b70c-10ee8c8b57c8"}
+      isAd={false}
     />)
   } else if (interest === 3) {
     return (<NonInteractablePost
@@ -159,42 +162,8 @@ export function RecommendedPost(props: UserProps) {
       }
       ]}
       image={"https://firebasestorage.googleapis.com/v0/b/fitshare-7b3ca.appspot.com/o/images%2Fendurance.jpg?alt=media&token=0c57bf30-8e98-459d-9e26-667ecda3e604"}
+      isAd={false}
     />)
   }
   return (<div></div>)
-}
-
-
-function NonInteractablePost(props: {
-  id: string,
-  name: string,
-  description: string,
-  program: { workoutName: string; exercises: { name: string; sets: number; reps: number }[] }[],
-  image: string
-}) {
-  return (
-    <div className="Post">
-      <strong>{props.name}</strong>
-      <br></br>
-      <div className="Post-content">
-        <p className="Post-description">{props.description}</p>
-        {props.program.map((workout, key) => (
-          <div className="Workout" key={key}>
-            <br></br>
-            <strong>{workout.workoutName}</strong>
-            <br></br>
-            {workout.exercises.map((exercise, key) => (
-              <div className="Exercise" key={key}>
-                <strong>{exercise.name}</strong>
-                <br></br>
-                {exercise.sets} sets of {exercise.reps} reps
-                <br></br>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-      {props.image ? <><br></br> <img src={props.image} className="Post-image" alt="Exercise" /></> : ""}
-    </div>
-  );
 }
