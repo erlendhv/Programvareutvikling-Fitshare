@@ -5,10 +5,12 @@ import { NonInteractablePost } from './NonInteractablePost';
 
 
 interface UserProps {
+  inGroupFeed: boolean;
   currentUser: firebase.User;
 }
 
 export function RecommendedPost(props: UserProps) {
+
   const [interest, setInterest] = useState(0);
 
   useEffect(() => {
@@ -27,7 +29,9 @@ export function RecommendedPost(props: UserProps) {
   }, []);
 
 
-
+  if (props.inGroupFeed) {
+    return null
+  }
   if (interest === 1) {
     return (<NonInteractablePost
       key={1}
