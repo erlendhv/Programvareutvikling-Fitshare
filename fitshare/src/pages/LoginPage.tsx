@@ -46,16 +46,11 @@ const LoginPage: React.FC = () => {
 
     if (!currentUserSnapshot.exists) {
 
-      // Get the user's profile picture as file
-      const path = `/images/${user!.photoURL}`;
-      const ref = firebase.storage().ref(path);
-      const url = await ref.getDownloadURL();
-
       // current user does not exist, create a new user document
       const userData = {
         id: user!.uid,
         displayName: user!.displayName,
-        photoURL: url,
+        photoURL: user!.photoURL,
         friends: [],
         programs: [],
         posts: [],
