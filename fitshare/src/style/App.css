@@ -319,7 +319,7 @@
   background: #272727;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
   overflow-y: auto;
 }
 
@@ -438,6 +438,30 @@
   color: orangered;
 }
 
+
+.Remove-member {
+  align-items: right;
+  margin-left: 70%;
+  margin-top: -12.5%;
+}
+
+
+.Remove-member:hover{
+  color: yellow;
+  cursor: pointer;
+}
+
+.Member-container {
+  /*display: flex;*/
+  justify-content: space-between;
+  align-items: left;
+}
+
+.Member-name {
+  align-items: left;
+  width: 78%;
+}
+
 .Delete-icon {
   position: absolute;
   font-size: 30px;
@@ -450,3 +474,5 @@
   color: #ac0303;
   cursor: pointer;
 }
+
+
