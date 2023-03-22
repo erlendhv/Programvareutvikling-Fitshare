@@ -45,10 +45,12 @@ const LoginPage: React.FC = () => {
     setInterest(currentUserInterest);
 
     if (!currentUserSnapshot.exists) {
+
       // current user does not exist, create a new user document
       const userData = {
         id: user!.uid,
         displayName: user!.displayName,
+        photoURL: user!.photoURL,
         friends: [],
         programs: [],
         posts: [],
@@ -57,6 +59,8 @@ const LoginPage: React.FC = () => {
         streakCount: 0,
       };
       await currentUserDoc.set(userData);
+
+
     } else {
       // current user exists, check if they have logged today
       onUserLogin(user as firebase.User);

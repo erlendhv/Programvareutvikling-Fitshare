@@ -28,14 +28,15 @@ interface UserProps {
 interface UserData {
     id: string;
     displayName: string;
+    photoURL: string;
 }
 
-export function Popup(props: { removePopup: any, isShowingFriends: boolean, currentUser: firebase.User, friendsData: UserData[], groupsData: GroupData[]}) {
+export function Popup(props: { removePopup: any, isShowingFriends: boolean, currentUser: firebase.User, friendsData: UserData[], groupsData: GroupData[] }) {
 
     const [addedFriends, setAddedFriends] = useState<string[]>([]);
 
     const [addedGroups, setAddedGroups] = useState<string[]>([]);
-    
+
     const [classState, setClassState] = useState('Make-group');
 
     const [users, setUsers] = useState<UserData[]>([]);
@@ -61,7 +62,7 @@ export function Popup(props: { removePopup: any, isShowingFriends: boolean, curr
 
     const makeNewGroup = async () => {
         const groupCollection = firebase.firestore().collection("groups");
-        setClassState("Made-new-group") 
+        setClassState("Made-new-group")
         if (searchWord == "") {
             setClassState("Make-group")
             return;
@@ -154,7 +155,7 @@ export function Popup(props: { removePopup: any, isShowingFriends: boolean, curr
                                         {
                                             user.displayName.toLowerCase().includes(searchWord.toLowerCase()) ?
                                                 <div key={key} className="Friends-popup-inner">
-                                                    <Friend name={user.displayName} />
+                                                    <Friend name={user.displayName} image={user.photoURL} />
                                                     <div className="Add-friend-button" onClick={() => handleAddFriend(user.id)}>{addedFriends.includes(user.id) ? 'Added' : 'Add'}</div>
                                                 </div>
                                                 : null
@@ -167,7 +168,7 @@ export function Popup(props: { removePopup: any, isShowingFriends: boolean, curr
                                         {
                                             group.name.toLowerCase().includes(searchWord.toLowerCase()) ?
                                                 <div key={key} className="Friends-popup-inner">
-                                                    <Friend name={group.name} />
+                                                    <Friend name={group.name} image={""} />
                                                     <div className="Add-friend-button" onClick={() => handleJoinGroup(group.id)}>{addedGroups.includes(group.id) ? 'Joined' : 'Join'}</div>
                                                 </div>
                                                 : null
