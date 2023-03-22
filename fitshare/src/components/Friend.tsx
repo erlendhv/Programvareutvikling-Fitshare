@@ -1,8 +1,9 @@
 import React from "react";
 
-export function Friend(props: { name: string }) {
+export function Friend(props: { name: string, image: string }) {
+  console.log(props.image);
   return <div className="Friend">
-    <div className="Friend-profile-pic"></div>
+    <img className="Friend-profile-pic" src={props.image} />
     <div className="Friend-name">{props.name}</div>
   </div>;
 }

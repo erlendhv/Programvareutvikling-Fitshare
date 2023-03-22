@@ -16,7 +16,7 @@ import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 import { useDocumentData, useCollectionData } from "react-firebase-hooks/firestore";
 import { Feed } from "../components/Feed";
 import { AiOutlineFire } from 'react-icons/ai';
-import {HiOutlineUserRemove} from 'react-icons/hi';
+import { HiOutlineUserRemove } from 'react-icons/hi';
 
 interface UserProps {
   currentUser: firebase.User;
@@ -94,7 +94,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
         groups: firebase.firestore.FieldValue.arrayRemove(currentGroup.id),
       });
     }
-    
+
   }
 
 
@@ -141,7 +141,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       setMembersOverhead("Friends")
       setAddFriendIcon("Add-friend-icon")
     }
-  }, [inGroupFeed, currentGroup,membersData,groupsData]);
+  }, [inGroupFeed, currentGroup, membersData, groupsData]);
 
   useEffect(() => {
     let friendsUnsubscribe: firebase.Unsubscribe | undefined;
@@ -193,7 +193,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
       // Find the streak of the user from firebase
       findStreak()
     }
-  
+
   }, [currentUserData]);
 
   const findStreak = async () => {
@@ -275,22 +275,22 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
               membersData
                 ? membersData.map((member: any) => (
                   <div key={member.id} className="Member-container">
-        <div className="Member-name">
-          <Friend name={member.displayName} />
-        </div>
-        {currentUser.uid === currentGroup?.admin && member.id !== currentGroup?.admin && (
-            <div className="Remove-member" onClick={() => handleRemoveMember(member.id)}>
-              <HiOutlineUserRemove />
-            </div>
-          )}
-      </div>
-    ))
+                    <div className="Member-name">
+                      <Friend name={member.displayName} image={member.photoURL} />
+                    </div>
+                    {currentUser.uid === currentGroup?.admin && member.id !== currentGroup?.admin && (
+                      <div className="Remove-member" onClick={() => handleRemoveMember(member.id)}>
+                        <HiOutlineUserRemove />
+                      </div>
+                    )}
+                  </div>
+                ))
                 : null
               :
 
               friendsData
                 ? friendsData.map((friend: any) => (
-                  <Friend key={friend.id} name={friend.displayName} />
+                  <Friend key={friend.id} name={friend.displayName} image={friend.photoURL} />
                 ))
                 : null
           }
@@ -314,7 +314,7 @@ const App: React.FC<UserProps> = ({ currentUser }) => {
         {currentPageName}
       </div>
     </div>
-    
+
   );
 };
 

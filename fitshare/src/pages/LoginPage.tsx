@@ -49,6 +49,7 @@ const LoginPage: React.FC = () => {
       const userData = {
         id: user!.uid,
         displayName: user!.displayName,
+        photoURL: user!.photoURL,
         friends: [],
         programs: [],
         posts: [],
