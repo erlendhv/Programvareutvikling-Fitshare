@@ -2,6 +2,13 @@
 
 Fitshare is a fitness application developed in TypeScript and React that helps you stay motivated and on track with your fitness goals. It offers a social platform for creating and sharing workout programs with friends and groups while providing features to track your progress. With Fitshare, you can easily create, share, and engage with your fitness community.
 
+![image](https://github.com/erlendhv/Programvareutvikling-Fitshare/assets/42642268/61306547-6ce1-43ad-b4e3-c5dc78ec54f3)
+
+![image](https://github.com/erlendhv/Programvareutvikling-Fitshare/assets/42642268/f8c1e0fe-43fe-4d96-b118-75f20551dc07)
+
+![image](https://github.com/erlendhv/Programvareutvikling-Fitshare/assets/42642268/1300b504-9bf2-490d-b7e1-b673ab8a817a)
+
+
 ## Table of Contents
 - [Features](#features)
 - [Requirements](#requirements)
